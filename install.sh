@@ -39,8 +39,8 @@ run() {
 }
 
 skill_names() {
-  # 10 vc-* directories + INDEX.md
-  ( cd "$PKG_DIR/skills" && find . -maxdepth 1 -mindepth 1 \( -type d -name 'vc-*' -o -name 'INDEX.md' \) -printf '%f\n' )
+  # 10 mv-* directories + INDEX.md
+  ( cd "$PKG_DIR/skills" && find . -maxdepth 1 -mindepth 1 \( -type d -name 'mv-*' -o -name 'INDEX.md' \) -printf '%f\n' )
 }
 
 if [[ "$DO_UNINSTALL" == "1" ]]; then
@@ -88,4 +88,4 @@ for n in $(skill_names); do
 done
 
 log "Skills installed. Restart Claude Code session to discover them."
-log "Verify: ls $PREFIX | grep '^vc-'"
+log "Verify: ls $PREFIX | grep '^mv-'"

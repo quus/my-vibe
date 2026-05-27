@@ -1,9 +1,9 @@
 ---
-name: vc-feature-upsert
+name: mv-feature-upsert
 description: Requirements MD(또는 bullet 한 줄짜리)를 읽어 Epic/Feature/Story로 자동 확장하고 Jira에 멱등(upsert) 동기화. Trigger when user says "요구 등록", "feature upsert", "기능 등록", "백로그 확장", "jira에 등록".
 ---
 
-# vc-feature-upsert — Requirements → Jira Upsert
+# mv-feature-upsert — Requirements → Jira Upsert
 
 > **vibecode_base 방법론 Phase 0a~0c**를 1회 호출로 실행한다.
 > 참조: `~/workspace/vibecode_base/docs/08-feature-expansion.md`

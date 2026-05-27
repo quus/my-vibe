@@ -1,9 +1,9 @@
 ---
-name: vc-arch-from-jira
+name: mv-arch-from-jira
 description: Jira의 모든 Epic/Story를 읽고 C4 모델 기반 ARCHITECTURE.md와 ADR을 생성, 발견된 아키텍처 작업(테스트 인프라, OTel, 마이그레이션 등)을 Jira Tech Story로 추가. Trigger when user says "아키텍처 수립", "architecture from jira", "C4 작성", "ADR 생성", "기술 백로그".
 ---
 
-# vc-arch-from-jira — Architecture from Jira
+# mv-arch-from-jira — Architecture from Jira
 
 > **vibecode_base 방법론 Phase 0.5** 자동화. Story에서 *공통 컴포넌트와 기술 부채*를 추출해 아키텍처와 Tech Story로 분리.
 > 참조: `~/workspace/vibecode_base/docs/09-architecture.md`
@@ -77,12 +77,12 @@ JQL: `project = <KEY> AND issuetype in (Epic, Story, Feature) AND statusCategory
 - 시간: 10분(자동) + 사람 검토·NFR 확정 30~60분
 
 ## 7. When NOT to use
-- 코드베이스 없는 상태(아직 아키텍처 그릴 거리 없음) — `vc-feature-upsert` 먼저.
+- 코드베이스 없는 상태(아직 아키텍처 그릴 거리 없음) — `mv-feature-upsert` 먼저.
 - Story 수 < 10 — 사람 1시간이 빠르다.
 
 ## 8. Chains
-- 선행: `vc-feature-upsert`, `vc-backlog-prioritize`
-- 후행: `vc-tdd-redgen` (Story 1개씩 진행)
+- 선행: `mv-feature-upsert`, `mv-backlog-prioritize`
+- 후행: `mv-tdd-redgen` (Story 1개씩 진행)
 
 ## 9. References
 - `~/workspace/vibecode_base/docs/09-architecture.md`

@@ -1,9 +1,9 @@
 ---
-name: vc-pr-review
+name: mv-pr-review
 description: 변경 브랜치/PR에 대해 5-레인(style/quality/api/security/performance) 병렬 리뷰를 돌려 심각도 매겨진 코멘트를 PR에 게시. Trigger when user says "리뷰 돌려", "pr review", "5-lane review", "변경분 리뷰", "코드 리뷰 자동".
 ---
 
-# vc-pr-review — 5-Lane Parallel PR Review
+# mv-pr-review — 5-Lane Parallel PR Review
 
 > **vibecode_base 방법론 Phase 5 VERIFY의 사람 리뷰 보조**. 5개 리뷰 에이전트가 *병렬*로 같은 변경분을 본다.
 > 참조: `~/workspace/vibecode_base/docs/05-quality-gates.md` §4
@@ -75,7 +75,7 @@ gh api repos/<O>/<R>/pulls/<N>/comments -F body=... -F path=... -F line=...
 요약 상단에:
 - 총 코멘트 수 (severity 별)
 - AC 일치 점검(Story §4 Test Plan과 매칭 누락 여부)
-- *Blocker 0 + Major ≤ 3* 이면 `vc-verify-merge`로 진행 가능 표시.
+- *Blocker 0 + Major ≤ 3* 이면 `mv-verify-merge`로 진행 가능 표시.
 
 ## 4. Output
 - `./review/<PR-or-branch>-summary.md` (집계 보고)
@@ -84,7 +84,7 @@ gh api repos/<O>/<R>/pulls/<N>/comments -F body=... -F path=... -F line=...
 
 ## 5. Guardrails
 - **레인 영역 침범 금지**. 각 에이전트는 자기 레인 코멘트만.
-- **자동 머지 금지**. 이 스킬은 *코멘트만*. 머지 결정은 사람 + `vc-verify-merge`.
+- **자동 머지 금지**. 이 스킬은 *코멘트만*. 머지 결정은 사람 + `mv-verify-merge`.
 - **AI 리뷰는 자문**. 사람 1명 이상 승인 의무 유지.
 - **민감 변경**(보안/스키마/배포 설정)은 *추가* 사람 리뷰어 자동 멘션.
 
@@ -93,8 +93,8 @@ gh api repos/<O>/<R>/pulls/<N>/comments -F body=... -F path=... -F line=...
 - 시간: 3~6분(병렬), 직렬 시 15~25분
 
 ## 7. Chains
-- 선행: `vc-tdd-impl` (변경 브랜치 푸시 후)
-- 후행: `vc-verify-merge`
+- 선행: `mv-tdd-impl` (변경 브랜치 푸시 후)
+- 후행: `mv-verify-merge`
 
 ## 8. When NOT to use
 - Diff < 30 LOC — 사람 1명이 더 빠름.

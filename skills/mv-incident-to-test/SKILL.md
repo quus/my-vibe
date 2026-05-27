@@ -1,9 +1,9 @@
 ---
-name: vc-incident-to-test
+name: mv-incident-to-test
 description: 운영 버그 보고를 받아 Jira Bug Story 생성 → 재현 실패 테스트(RED) → 최소 픽스(GREEN) → 회귀 테스트 영구 보존 → 핫픽스 PR + 릴리스 브랜치 백포트. Trigger when user says "버그 픽스", "incident", "프로덕션 버그", "regression test", "hotfix", "사고 대응".
 ---
 
-# vc-incident-to-test — Incident → Reproducible Test → Hotfix
+# mv-incident-to-test — Incident → Reproducible Test → Hotfix
 
 > **vibecode_base 방법론의 사고 대응 + 회귀 방지 사이클**.
 > 핵심 원칙: *모든 버그는 RED로 시작한다.* 픽스를 먼저 짜면 회귀가 따라온다.
@@ -82,7 +82,7 @@ git checkout -b hotfix/<KEY>-<slug> origin/release/<x.y>   # 또는 origin/main
 - 5분 내 검색되도록 `tests/regression/` 인덱스 갱신.
 
 ### Step F — 핫픽스 릴리스
-- `vc-release` 호출 with `--hotfix` 옵션.
+- `mv-release` 호출 with `--hotfix` 옵션.
 - 별도 release notes: *"보안/안정성 패치 — <KEY>"*.
 - 카나리 단계 *짧게*(5분), 신속 배포.
 
@@ -118,11 +118,11 @@ git checkout -b hotfix/<KEY>-<slug> origin/release/<x.y>   # 또는 origin/main
 
 ## 7. Chains
 - 선행: 운영 알람·고객 보고
-- 후행: `vc-release --hotfix`, 필요 시 `vc-sprint-retro`
+- 후행: `mv-release --hotfix`, 필요 시 `mv-sprint-retro`
 
 ## 8. When NOT to use
 - 재현 정보가 *전혀* 없는 모호한 보고 — 정보 수집 먼저.
-- 의도된 동작 변경 요청 — 버그가 아닌 *Story*로 처리(`vc-feature-upsert`).
+- 의도된 동작 변경 요청 — 버그가 아닌 *Story*로 처리(`mv-feature-upsert`).
 
 ## 9. References
 - `~/workspace/vibecode_base/docs/05-quality-gates.md` §6 회귀 방지

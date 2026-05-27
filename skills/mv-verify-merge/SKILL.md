@@ -1,9 +1,9 @@
 ---
-name: vc-verify-merge
+name: mv-verify-merge
 description: Story 단위 변경에 대해 전체 테스트 + AC↔테스트 매핑 + Verifier 증거를 수집하고 트렁크에 머지(또는 PR 머지). 실패 시 Jira에 새 태스크 등록. Trigger when user says "verify and merge", "검증 후 머지", "DoD 점검", "AC 매핑 검증", "evidence pass".
 ---
 
-# vc-verify-merge — Final Verification & Merge
+# mv-verify-merge — Final Verification & Merge
 
 > **vibecode_base 방법론 Phase 5 VERIFY**의 최종 게이트.
 > *증거 없는 머지는 없다.* 자기보고 PASS 금지.
@@ -82,7 +82,7 @@ git rebase origin/main          # 충돌 시 → 사람에게 알리고 중단
 1. **머지하지 않음.**
 2. `verdict.md`를 PR 코멘트로 게시.
 3. Jira Story → 상태 그대로(`In Review`), comment with FAIL 사유.
-4. *수정 작업*은 `vc-tdd-redgen`/`vc-tdd-impl`로 회귀.
+4. *수정 작업*은 `mv-tdd-redgen`/`mv-tdd-impl`로 회귀.
 5. 3회 연속 FAIL 시 → SPEC 의심, 사람 개입 요청.
 
 ## 4. Output
@@ -103,11 +103,11 @@ git rebase origin/main          # 충돌 시 → 사람에게 알리고 중단
 - 시간: 5~20분 (테스트 실행 시간 포함)
 
 ## 7. Chains
-- 선행: `vc-pr-review` (블로커 0 + 사람 승인 후 권장)
-- 후행: `vc-release` (마일스톤/Epic 끝)
+- 선행: `mv-pr-review` (블로커 0 + 사람 승인 후 권장)
+- 후행: `mv-release` (마일스톤/Epic 끝)
 
 ## 8. When NOT to use
-- 테스트가 *없거나* AC 매핑이 *전혀 안 된* PR — `vc-tdd-redgen`으로 회귀.
+- 테스트가 *없거나* AC 매핑이 *전혀 안 된* PR — `mv-tdd-redgen`으로 회귀.
 - 비-기능 변경(문서·CI 설정)으로 코드 테스트가 무의미 — 별도 절차.
 
 ## 9. References

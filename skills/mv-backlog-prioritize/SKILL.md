@@ -1,9 +1,9 @@
 ---
-name: vc-backlog-prioritize
+name: mv-backlog-prioritize
 description: Jira 백로그(미닫힘 항목)를 읽어 MoSCoW/RICE/WSJF로 점수화하고 우선순위·랭크·라벨을 갱신, PLAN 후보 마크다운 생성. Trigger when user says "백로그 우선순위", "prioritize backlog", "jira priority", "랭킹", "RICE", "WSJF".
 ---
 
-# vc-backlog-prioritize — Jira Backlog Prioritization
+# mv-backlog-prioritize — Jira Backlog Prioritization
 
 > **vibecode_base 방법론 Phase 0d (PLAN의 입력)** 자동화.
 > 참조: `~/workspace/vibecode_base/docs/07-product-planning.md`
@@ -46,7 +46,7 @@ JQL: `project = <KEY> AND statusCategory != Done`
 
 ### Step D — Jira Update (idempotent)
 - Priority field 또는 label `priority:<rank>` 갱신.
-- 점수 산출 근거를 Jira 댓글로 1줄: *"RICE 9.2 = (1000×3×0.7)/228, by vc-backlog-prioritize"*
+- 점수 산출 근거를 Jira 댓글로 1줄: *"RICE 9.2 = (1000×3×0.7)/228, by mv-backlog-prioritize"*
 - Status 전환은 *제안만* — 실제 전환은 사람.
 
 ### Step E — PLAN 후보 출력
@@ -54,7 +54,7 @@ JQL: `project = <KEY> AND statusCategory != Done`
 - 상위 20개 Story 표(랭크·점수·근거)
 - 의존성 그래프(Mermaid)
 - 마일스톤 묶음 *제안* (팀 용량 K 인-주 입력 시)
-- `vc-arch-from-jira` 또는 사람 PLAN 작성으로 이어짐
+- `mv-arch-from-jira` 또는 사람 PLAN 작성으로 이어짐
 
 ## 4. Output
 - `./jira/snapshot-<date>.json` (감사용 스냅샷)
@@ -77,7 +77,7 @@ JQL: `project = <KEY> AND statusCategory != Done`
 - 점수 모델을 합의하지 않은 팀 — 결과의 신뢰도 0.
 
 ## 8. Next Step
-점수가 매겨진 백로그를 받아 `vc-arch-from-jira`로 아키텍처 결정 → 그다음 `vc-tdd-redgen`.
+점수가 매겨진 백로그를 받아 `mv-arch-from-jira`로 아키텍처 결정 → 그다음 `mv-tdd-redgen`.
 
 ## 9. References
 - `~/workspace/vibecode_base/docs/07-product-planning.md`

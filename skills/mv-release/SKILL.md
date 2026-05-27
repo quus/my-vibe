@@ -1,9 +1,9 @@
 ---
-name: vc-release
+name: mv-release
 description: 마일스톤 또는 Epic 단위로 릴리스를 컷팅 — 태그·CHANGELOG·스테이징 배포·스모크·카나리·롤백 플랜 기록 + Jira Epic을 Done으로 전환. Trigger when user says "릴리스 시작", "cut release", "vc release", "배포 파이프라인", "tag and deploy", "릴리스 노트".
 ---
 
-# vc-release — Release Pipeline (Epic/Milestone)
+# mv-release — Release Pipeline (Epic/Milestone)
 
 > **vibecode_base 방법론 Phase 5 이후**: 머지된 Story들을 사용자에게 *실제로* 보낸다.
 > 단순 배포가 아니라 *증거가 기록되는* 릴리스.
@@ -97,8 +97,8 @@ git push origin v<version>
 - 시간: 30분~2시간 (배포·카나리 모니터링 포함)
 
 ## 7. Chains
-- 선행: `vc-verify-merge` (해당 Story 머지 완료)
-- 후행: `vc-sprint-retro` (필요 시)
+- 선행: `mv-verify-merge` (해당 Story 머지 완료)
+- 후행: `mv-sprint-retro` (필요 시)
 
 ## 8. When NOT to use
 - 1 Story만 머지한 일상 패치 — 일반 CI/CD로 충분.

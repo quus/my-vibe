@@ -1,9 +1,9 @@
 ---
-name: vc-sprint-retro
+name: mv-sprint-retro
 description: 스프린트 종료 시 Jira에서 Story 완료율·점수 추정 vs 실제·블로커·ADR 변경을 모아 회고 마크다운을 생성하고 다음 스프린트 용량/PLAN.md를 보정. Trigger when user says "스프린트 회고", "sprint retro", "velocity 분석", "회고", "다음 스프린트 용량".
 ---
 
-# vc-sprint-retro — Sprint Retrospective & Velocity Calibration
+# mv-sprint-retro — Sprint Retrospective & Velocity Calibration
 
 > **vibecode_base 방법론의 학습 루프**.
 > Story Points 추정/실제 차이를 다음 PLAN에 *수치적으로* 반영. 인상비평 아닌 데이터 기반.
@@ -31,7 +31,7 @@ JQL: `project = <KEY> AND sprint = "<sprint-id>"`
 3. 댓글에서 *블로커 키워드*("blocked by", "waiting on") 추출
 4. 머지된 PR 통계(파일 수, LOC, 리뷰 라운드, FAIL 횟수)
 5. `adr/` 디렉터리의 *이번 스프린트 동안 추가/변경된 ADR* 수와 제목
-6. `vc-incident-to-test`로 처리된 사고 수와 Sev
+6. `mv-incident-to-test`로 처리된 사고 수와 Sev
 
 ### Step B — 지표 계산
 - **Completion rate** = Done / (Planned)
@@ -113,8 +113,8 @@ JQL: `project = <KEY> AND sprint = "<sprint-id>"`
 - 시간: 10분(자동) + 팀 회고 미팅 30분
 
 ## 7. Chains
-- 선행: `vc-verify-merge` (스프린트 동안 머지된 Story들)
-- 후행: 다음 사이클의 `vc-backlog-prioritize` 입력으로
+- 선행: `mv-verify-merge` (스프린트 동안 머지된 Story들)
+- 후행: 다음 사이클의 `mv-backlog-prioritize` 입력으로
 
 ## 8. When NOT to use
 - 진행 중인 스프린트 — 데이터 미완. 종료 후.

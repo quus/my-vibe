@@ -1,9 +1,9 @@
 ---
-name: vc-tdd-redgen
+name: mv-tdd-redgen
 description: Jira에서 가장 우선순위 높은 미닫힘 Story 1개를 픽업해 AC별 실패 테스트(RED)를 생성·실행해 실패를 확인. Trigger when user says "다음 스토리 테스트", "tdd red", "실패 테스트 만들어", "story → tests", "AC 테스트 생성".
 ---
 
-# vc-tdd-redgen — Jira Story → Failing Tests (RED)
+# mv-tdd-redgen — Jira Story → Failing Tests (RED)
 
 > **vibecode_base 방법론 Phase 4 IMPL의 RED 단계** 자동화.
 > 참조: `~/workspace/vibecode_base/docs/10-tdd-cycle.md` §2
@@ -71,8 +71,8 @@ Story <KEY>의 §4 Test Plan의 *RED 우선순위 1번부터 모두*에 대해
 - 시간: 3~10분
 
 ## 7. Chains
-- 선행: `vc-backlog-prioritize`(Ready 후보가 있어야), `vc-arch-from-jira`(영향 컨테이너 안내)
-- 후행: `vc-tdd-impl` (GREEN+REFACTOR)
+- 선행: `mv-backlog-prioritize`(Ready 후보가 있어야), `mv-arch-from-jira`(영향 컨테이너 안내)
+- 후행: `mv-tdd-impl` (GREEN+REFACTOR)
 
 ## 8. When NOT to use
 - Story의 AC가 *행동*이 아닌 *기능 명사*("필터가 있다") — 먼저 SPEC 보강.

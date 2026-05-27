@@ -1,4 +1,4 @@
-# vibecode_base Skill Suite — `vc-*` 10종
+# vibecode_base Skill Suite — `mv-*` 10종
 
 > vibecode_base 방법론(`/home/kwshim/workspace/vibecode_base/`)의 *전 과정*을 자동화하는 10개 Skill 묶음.
 > 모든 스킬은 한국어·영어 트리거 모두 지원하며, 결과를 *파일과 Jira 양쪽*에 남겨 추적성을 보장.
@@ -9,16 +9,16 @@
 
 | # | Skill | Phase | 역할 |
 |---|---|---|---|
-| 1 | `vc-feature-upsert` | 0a-0c | Requirements MD → Epic/Story 자동 확장 → Jira upsert |
-| 2 | `vc-backlog-prioritize` | 0d | MoSCoW/RICE/WSJF로 백로그 우선순위·랭크·라벨 |
-| 3 | `vc-arch-from-jira` | 0.5 | Jira → C4 ARCHITECTURE.md + ADR + Tech Story |
-| 4 | `vc-tdd-redgen` | 4 RED | 다음 Story → AC별 실패 테스트 생성 |
-| 5 | `vc-tdd-impl` | 4 GREEN+REFACTOR | Worktree에서 컨벤션·아키 지키며 구현 |
-| 6 | `vc-pr-review` | 5 | 5-레인 병렬 리뷰 (style/quality/api/security/perf) |
-| 7 | `vc-verify-merge` | 5 | 전체 게이트 + AC 매핑 + 머지 |
-| 8 | `vc-release` | post-5 | 태그·스모크·카나리·롤백 + Jira Epic Done |
-| 9 | `vc-incident-to-test` | 회귀 방지 | 프로덕션 버그 → 재현 RED → 픽스 → 영구 회귀 |
-| 10 | `vc-sprint-retro` | 학습 루프 | 스프린트 지표·ADR 델타·다음 용량 보정 |
+| 1 | `mv-feature-upsert` | 0a-0c | Requirements MD → Epic/Story 자동 확장 → Jira upsert |
+| 2 | `mv-backlog-prioritize` | 0d | MoSCoW/RICE/WSJF로 백로그 우선순위·랭크·라벨 |
+| 3 | `mv-arch-from-jira` | 0.5 | Jira → C4 ARCHITECTURE.md + ADR + Tech Story |
+| 4 | `mv-tdd-redgen` | 4 RED | 다음 Story → AC별 실패 테스트 생성 |
+| 5 | `mv-tdd-impl` | 4 GREEN+REFACTOR | Worktree에서 컨벤션·아키 지키며 구현 |
+| 6 | `mv-pr-review` | 5 | 5-레인 병렬 리뷰 (style/quality/api/security/perf) |
+| 7 | `mv-verify-merge` | 5 | 전체 게이트 + AC 매핑 + 머지 |
+| 8 | `mv-release` | post-5 | 태그·스모크·카나리·롤백 + Jira Epic Done |
+| 9 | `mv-incident-to-test` | 회귀 방지 | 프로덕션 버그 → 재현 RED → 픽스 → 영구 회귀 |
+| 10 | `mv-sprint-retro` | 학습 루프 | 스프린트 지표·ADR 델타·다음 용량 보정 |
 
 ---
 
@@ -27,34 +27,34 @@
 ```
 요구 텍스트
   │
-  │ /vc-feature-upsert
+  │ /mv-feature-upsert
   ▼
 FEATURES.md + jira/{epics,stories}/*.md ──▶ Jira
   │
-  │ /vc-backlog-prioritize
+  │ /mv-backlog-prioritize
   ▼
 점수·랭크·라벨 갱신 + PLAN-candidate.md
   │
-  │ /vc-arch-from-jira
+  │ /mv-arch-from-jira
   ▼
 ARCHITECTURE.md + adr/*.md + Jira Tech Stories
   │
   ▼ (Story 1개씩 반복)
   ┌───────────────────────────────────────────┐
-  │ /vc-tdd-redgen   → 실패 테스트            │
-  │ /vc-tdd-impl     → 통과 코드 (worktree)   │
-  │ /vc-pr-review    → 5-레인 리뷰            │
-  │ /vc-verify-merge → 증거 PASS + 머지        │
+  │ /mv-tdd-redgen   → 실패 테스트            │
+  │ /mv-tdd-impl     → 통과 코드 (worktree)   │
+  │ /mv-pr-review    → 5-레인 리뷰            │
+  │ /mv-verify-merge → 증거 PASS + 머지        │
   └───────────────────────────────────────────┘
   │
   │ (Epic 단위 묶음)
-  │ /vc-release
+  │ /mv-release
   ▼
 배포된 버전 + 롤백 플랜
   │
-  ├─ 프로덕션 버그 발생 → /vc-incident-to-test
+  ├─ 프로덕션 버그 발생 → /mv-incident-to-test
   │
-  └─ 스프린트 종료 → /vc-sprint-retro → 다음 사이클 PLAN 보정
+  └─ 스프린트 종료 → /mv-sprint-retro → 다음 사이클 PLAN 보정
 ```
 
 ---
@@ -63,15 +63,15 @@ ARCHITECTURE.md + adr/*.md + Jira Tech Stories
 
 | 선행 ↓ → 후행 | upsert | prio | arch | red | impl | review | verify | release | incident | retro |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `vc-feature-upsert` | — | ✅ | ✅ | — | — | — | — | — | — | — |
-| `vc-backlog-prioritize` | — | — | ✅ | ✅ | — | — | — | — | — | — |
-| `vc-arch-from-jira` | — | — | — | ✅ | ✅ | — | — | — | — | — |
-| `vc-tdd-redgen` | — | — | — | — | ✅ | — | — | — | — | — |
-| `vc-tdd-impl` | — | — | — | — | — | ✅ | ✅ | — | — | — |
-| `vc-pr-review` | — | — | — | — | — | — | ✅ | — | — | — |
-| `vc-verify-merge` | — | — | — | — | — | — | — | ✅ | — | — |
-| `vc-release` | — | — | — | — | — | — | — | — | — | ✅ |
-| `vc-incident-to-test` | — | — | — | — | — | ✅ | ✅ | ✅ | — | — |
+| `mv-feature-upsert` | — | ✅ | ✅ | — | — | — | — | — | — | — |
+| `mv-backlog-prioritize` | — | — | ✅ | ✅ | — | — | — | — | — | — |
+| `mv-arch-from-jira` | — | — | — | ✅ | ✅ | — | — | — | — | — |
+| `mv-tdd-redgen` | — | — | — | — | ✅ | — | — | — | — | — |
+| `mv-tdd-impl` | — | — | — | — | — | ✅ | ✅ | — | — | — |
+| `mv-pr-review` | — | — | — | — | — | — | ✅ | — | — | — |
+| `mv-verify-merge` | — | — | — | — | — | — | — | ✅ | — | — |
+| `mv-release` | — | — | — | — | — | — | — | — | — | ✅ |
+| `mv-incident-to-test` | — | — | — | — | — | ✅ | ✅ | ✅ | — | — |
 
 ✅ = 직후 일반적인 다음 스킬.
 
@@ -124,17 +124,17 @@ release-notes/<ver>.md
 
 새 제품:
 ```
-1. /vc-feature-upsert   (input.md 또는 FEATURES.md)
-2. /vc-backlog-prioritize
-3. /vc-arch-from-jira
-4. (반복) /vc-tdd-redgen → /vc-tdd-impl → /vc-pr-review → /vc-verify-merge
-5. /vc-release   (Epic 또는 마일스톤 끝)
-6. /vc-sprint-retro  (스프린트 끝)
+1. /mv-feature-upsert   (input.md 또는 FEATURES.md)
+2. /mv-backlog-prioritize
+3. /mv-arch-from-jira
+4. (반복) /mv-tdd-redgen → /mv-tdd-impl → /mv-pr-review → /mv-verify-merge
+5. /mv-release   (Epic 또는 마일스톤 끝)
+6. /mv-sprint-retro  (스프린트 끝)
 ```
 
 운영 중 사고:
 ```
-/vc-incident-to-test  → /vc-release --hotfix → /vc-sprint-retro (다음 회고에 반영)
+/mv-incident-to-test  → /mv-release --hotfix → /mv-sprint-retro (다음 회고에 반영)
 ```
 
 ---
@@ -167,10 +167,10 @@ release-notes/<ver>.md
 
 ## 9. 트러블슈팅
 
-- 스킬이 매칭 안 됨 → 트리거 키워드를 정확히 또는 `/vc-<name>` 명시 호출.
+- 스킬이 매칭 안 됨 → 트리거 키워드를 정확히 또는 `/mv-<name>` 명시 호출.
 - Jira 권한 에러 → `JIRA_API_TOKEN` 확인, 프로젝트 권한.
 - MCP 없음 → REST 모드로 자동 폴백(`Atlassian MCP` 미설치 시).
-- 토큰 초과 → 각 스킬 §6 비용 가이드. `/clear` 또는 `vc-tdd-impl`을 worktree 격리로.
+- 토큰 초과 → 각 스킬 §6 비용 가이드. `/clear` 또는 `mv-tdd-impl`을 worktree 격리로.
 
 ---
 
@@ -178,4 +178,4 @@ release-notes/<ver>.md
 
 | 날짜 | 변경 |
 |---|---|
-| 2026-05-27 | v1.0 — 10개 스킬 초안 배포 (vc-feature-upsert ~ vc-sprint-retro) |
+| 2026-05-27 | v1.0 — 10개 스킬 초안 배포 (mv-feature-upsert ~ mv-sprint-retro) |

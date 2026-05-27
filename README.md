@@ -1,7 +1,7 @@
 # my-vibe — Claude Code SDLC Skill Suite
 
 > **요구사항 → Jira → 아키텍처 → TDD → 리뷰 → 머지 → 릴리스 → 회고**까지,
-> 소프트웨어 개발의 *전 과정*을 자동화하는 10개 vc-* 스킬 패키지.
+> 소프트웨어 개발의 *전 과정*을 자동화하는 10개 mv-* 스킬 패키지.
 > [vibecode_base 방법론](../vibecode_base/) 위에 동작합니다.
 
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](./CHANGELOG.md)
@@ -14,16 +14,16 @@
 
 | 단계 | 스킬 | 트리거 예시 |
 |---|---|---|
-| 백로그 | `vc-feature-upsert` | "기능 등록", "feature upsert" |
-| 우선순위 | `vc-backlog-prioritize` | "백로그 우선순위", "RICE" |
-| 아키텍처 | `vc-arch-from-jira` | "아키텍처 수립", "C4 작성" |
-| RED | `vc-tdd-redgen` | "tdd red", "실패 테스트" |
-| GREEN/REFACTOR | `vc-tdd-impl` | "구현 시작", "worktree 구현" |
-| 리뷰 | `vc-pr-review` | "리뷰 돌려", "5-lane review" |
-| 검증·머지 | `vc-verify-merge` | "검증 후 머지", "DoD 점검" |
-| 릴리스 | `vc-release` | "릴리스 시작", "cut release" |
-| 사고 | `vc-incident-to-test` | "incident", "hotfix" |
-| 회고 | `vc-sprint-retro` | "스프린트 회고", "velocity" |
+| 백로그 | `mv-feature-upsert` | "기능 등록", "feature upsert" |
+| 우선순위 | `mv-backlog-prioritize` | "백로그 우선순위", "RICE" |
+| 아키텍처 | `mv-arch-from-jira` | "아키텍처 수립", "C4 작성" |
+| RED | `mv-tdd-redgen` | "tdd red", "실패 테스트" |
+| GREEN/REFACTOR | `mv-tdd-impl` | "구현 시작", "worktree 구현" |
+| 리뷰 | `mv-pr-review` | "리뷰 돌려", "5-lane review" |
+| 검증·머지 | `mv-verify-merge` | "검증 후 머지", "DoD 점검" |
+| 릴리스 | `mv-release` | "릴리스 시작", "cut release" |
+| 사고 | `mv-incident-to-test` | "incident", "hotfix" |
+| 회고 | `mv-sprint-retro` | "스프린트 회고", "velocity" |
 
 전체 흐름 다이어그램 + 체이닝 매트릭스: [`skills/INDEX.md`](./skills/INDEX.md).
 
@@ -61,8 +61,8 @@ sha256sum -c dist/SHA256SUMS
 
 ### 2.3 검증
 ```bash
-ls ~/.claude/skills/ | grep '^vc-'
-# vc-arch-from-jira  vc-backlog-prioritize ... (10개)
+ls ~/.claude/skills/ | grep '^mv-'
+# mv-arch-from-jira  mv-backlog-prioritize ... (10개)
 ```
 
 Claude Code 세션을 다시 시작하면 트리거 키워드로 자동 매칭됩니다.
@@ -84,8 +84,8 @@ export JIRA_PROJECT_KEY="<KEY>"
 
 ### 권장 도구
 - **Atlassian MCP server** — `/oh-my-claudecode:mcp-setup`로 설치. 없으면 REST 폴백.
-- **GitHub CLI** (`gh`) — `vc-pr-review`, `vc-verify-merge`, `vc-release`가 사용.
-- **git ≥ 2.5** — worktree(`vc-tdd-impl`)에 필요.
+- **GitHub CLI** (`gh`) — `mv-pr-review`, `mv-verify-merge`, `mv-release`가 사용.
+- **git ≥ 2.5** — worktree(`mv-tdd-impl`)에 필요.
 
 ### 방법론 문서
 스킬들은 [`vibecode_base/`](../vibecode_base/)의 방법론을 참조합니다. 같이 클론하시면:
@@ -99,18 +99,18 @@ git clone https://github.com/kwshim/vibecode_base.git ~/workspace/vibecode_base
 
 새 제품:
 ```
-1. /vc-feature-upsert      ← input.md 또는 FEATURES.md
-2. /vc-backlog-prioritize
-3. /vc-arch-from-jira
+1. /mv-feature-upsert      ← input.md 또는 FEATURES.md
+2. /mv-backlog-prioritize
+3. /mv-arch-from-jira
 4. (Story 1개씩 반복)
-   /vc-tdd-redgen → /vc-tdd-impl → /vc-pr-review → /vc-verify-merge
-5. /vc-release             ← Epic/마일스톤 끝
-6. /vc-sprint-retro        ← 스프린트 끝
+   /mv-tdd-redgen → /mv-tdd-impl → /mv-pr-review → /mv-verify-merge
+5. /mv-release             ← Epic/마일스톤 끝
+6. /mv-sprint-retro        ← 스프린트 끝
 ```
 
 운영 사고:
 ```
-/vc-incident-to-test → /vc-release --hotfix → 다음 /vc-sprint-retro 반영
+/mv-incident-to-test → /mv-release --hotfix → 다음 /mv-sprint-retro 반영
 ```
 
 ---
@@ -153,7 +153,7 @@ git clone https://github.com/kwshim/vibecode_base.git ~/workspace/vibecode_base
 
 | 증상 | 진단 | 처방 |
 |---|---|---|
-| 스킬이 트리거 안 됨 | 트리거 키워드 불일치 | `Skill` 도구로 명시 호출 (`vc-<name>`) |
+| 스킬이 트리거 안 됨 | 트리거 키워드 불일치 | `Skill` 도구로 명시 호출 (`mv-<name>`) |
 | Jira 403/401 | 토큰/권한 | `JIRA_API_TOKEN` 재확인 |
 | MCP 미발견 | 미설치 | REST 폴백 자동, 또는 `/oh-my-claudecode:mcp-setup` |
 | 토큰 초과 | 컨텍스트 누적 | `/clear` 후 worktree로 격리 |
