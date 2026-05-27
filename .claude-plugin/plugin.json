@@ -1,60 +1,12 @@
 {
   "name": "my-vibe",
-  "displayName": "my-vibe — Claude Code SDLC Skill Suite",
-  "version": "1.0.2",
-  "description": "Requirements → Jira → Architecture → TDD → Review → Merge → Release → Retro. 10개 mv-* 스킬로 소프트웨어 개발 전 과정을 자동화하는 vibecode_base 방법론 패키지.",
-  "license": "MIT",
+  "description": "10 mv-* skills covering the full SDLC: Requirements → Jira → Architecture → TDD → Review → Merge → Release → Retro.",
+  "version": "1.0.3",
   "author": {
     "name": "kwshim",
     "email": "kusim31@gmail.com"
   },
   "homepage": "https://github.com/quus/my-vibe",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/quus/my-vibe.git"
-  },
-  "keywords": [
-    "claude-code",
-    "skills",
-    "methodology",
-    "tdd",
-    "jira",
-    "architecture",
-    "spec-driven-development",
-    "korean"
-  ],
-  "engines": {
-    "claude-code": ">=1.0.0"
-  },
-  "skills": [
-    { "id": "mv-feature-upsert",      "path": "skills/mv-feature-upsert/SKILL.md",      "phase": "0a-0c" },
-    { "id": "mv-backlog-prioritize",  "path": "skills/mv-backlog-prioritize/SKILL.md",  "phase": "0d" },
-    { "id": "mv-arch-from-jira",      "path": "skills/mv-arch-from-jira/SKILL.md",      "phase": "0.5" },
-    { "id": "mv-tdd-redgen",          "path": "skills/mv-tdd-redgen/SKILL.md",          "phase": "4-RED" },
-    { "id": "mv-tdd-impl",            "path": "skills/mv-tdd-impl/SKILL.md",            "phase": "4-GREEN+REFACTOR" },
-    { "id": "mv-pr-review",           "path": "skills/mv-pr-review/SKILL.md",           "phase": "5" },
-    { "id": "mv-verify-merge",        "path": "skills/mv-verify-merge/SKILL.md",        "phase": "5" },
-    { "id": "mv-release",             "path": "skills/mv-release/SKILL.md",             "phase": "post-5" },
-    { "id": "mv-incident-to-test",    "path": "skills/mv-incident-to-test/SKILL.md",    "phase": "regression" },
-    { "id": "mv-sprint-retro",        "path": "skills/mv-sprint-retro/SKILL.md",        "phase": "learning-loop" }
-  ],
-  "methodology": {
-    "name": "vibecode_base",
-    "version": "1.1.0",
-    "docsPath": "../vibecode_base",
-    "homepageHint": "templates and 10 phases of docs ship separately at vibecode_base/"
-  },
-  "requirements": {
-    "env": [
-      "JIRA_BASE_URL",
-      "JIRA_EMAIL",
-      "JIRA_API_TOKEN",
-      "JIRA_PROJECT_KEY"
-    ],
-    "recommended": [
-      "Atlassian MCP server",
-      "GitHub CLI (gh)",
-      "git >= 2.5 (worktree support)"
-    ]
-  }
+  "repository": "https://github.com/quus/my-vibe",
+  "license": "MIT"
 }

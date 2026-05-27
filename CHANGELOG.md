@@ -3,6 +3,19 @@
 All notable changes to **my-vibe** will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.0.3] — 2026-05-27
+
+### Fixed
+- `.claude-plugin/plugin.json` 매니페스트 스키마 위반 해결:
+  - `repository`: 객체(`{type, url}`) → **문자열** (Claude Code는 문자열만 허용).
+  - 사용자 정의 `skills[]` 배열 **제거** (Claude Code는 `skills/` 디렉터리를 *자동 탐색*).
+  - 보수적 검증 회피용으로 `displayName`, `keywords`, `engines`, `methodology`, `requirements` 같은 *비표준 필드 모두 제거*.
+- 결과: `/plugin install my-vibe@my-vibe` 시 *"Validation errors: repository ... / skills ..."* 에러 해결.
+
+### Changed
+- 매니페스트는 최소 7개 공식 필드만 유지: `name`, `description`, `version`, `author`, `homepage`, `repository`, `license`.
+- Tarball: `my-vibe-1.0.3.tgz` (SHA256 갱신).
+
 ## [1.0.2] — 2026-05-27
 
 ### Fixed
