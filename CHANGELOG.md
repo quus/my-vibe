@@ -3,6 +3,16 @@
 All notable changes to **my-vibe** will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.0.2] — 2026-05-27
+
+### Fixed
+- `.claude-plugin/marketplace.json` `plugins[].source` 스키마 수정:
+  - ❌ `"type": "git"` → ✅ `"source": "github"` (Claude Code가 지원하지 않는 키 값이었음)
+  - 설치 시 *"This plugin uses a source type your Claude Code version does not support"* 에러 해결.
+
+### Changed
+- Tarball: `my-vibe-1.0.2.tgz` (SHA256 갱신).
+
 ## [1.0.1] — 2026-05-27
 
 ### Added

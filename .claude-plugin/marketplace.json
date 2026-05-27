@@ -9,11 +9,11 @@
     {
       "name": "my-vibe",
       "source": {
-        "type": "git",
+        "source": "github",
         "repo": "quus/my-vibe"
       },
       "description": "10 mv-* skills covering the full SDLC: Requirements → Jira → Architecture → TDD → Review → Merge → Release → Retro.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "homepage": "https://github.com/quus/my-vibe",
       "license": "MIT",
       "tags": [

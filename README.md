@@ -4,7 +4,7 @@
 > 소프트웨어 개발의 *전 과정*을 자동화하는 10개 mv-* 스킬 패키지.
 > [vibecode_base 방법론](../vibecode_base/) 위에 동작합니다.
 
-[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.0.2-blue.svg)](./CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Skills](https://img.shields.io/badge/skills-10-green.svg)](./skills/INDEX.md)
 
@@ -41,7 +41,7 @@ Claude Code 세션에서:
 
 특정 태그를 고정하려면:
 ```
-/plugin marketplace add https://github.com/quus/my-vibe.git#v1.0.1
+/plugin marketplace add https://github.com/quus/my-vibe.git#v1.0.2
 ```
 
 마켓플레이스를 팀 표준으로 두려면 `.claude/settings.json`에:
@@ -74,8 +74,8 @@ cd my-vibe
 ### 2.3 Tarball 설치 (배포 산출물 / 에어갭)
 
 ```bash
-tar -xzf my-vibe-1.0.1.tgz
-cd my-vibe-1.0.1
+tar -xzf my-vibe-1.0.2.tgz
+cd my-vibe-1.0.2
 ./install.sh
 ```
 

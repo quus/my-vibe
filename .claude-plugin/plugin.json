@@ -1,7 +1,7 @@
 {
   "name": "my-vibe",
   "displayName": "my-vibe — Claude Code SDLC Skill Suite",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Requirements → Jira → Architecture → TDD → Review → Merge → Release → Retro. 10개 mv-* 스킬로 소프트웨어 개발 전 과정을 자동화하는 vibecode_base 방법론 패키지.",
   "license": "MIT",
   "author": {
