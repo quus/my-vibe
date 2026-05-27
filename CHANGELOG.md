@@ -3,6 +3,22 @@
 All notable changes to **my-vibe** will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.0.6] — 2026-05-27
+
+### Changed
+- `mv-setup` 재실행 UX 개선 — **엔터-유지 원칙**:
+  - 기존 `.env`의 모든 값을 자동으로 로드 → 각 입력 프롬프트의 *기본값*으로 노출
+    (시크릿은 `****ABCD` 형식으로 마지막 4자만).
+  - 빈 입력(엔터만) → *기존 값 그대로 유지*. 새 값을 명시한 필드만 교체.
+  - 검증 실패(형식 오류) 시 *재입력 루프* — 기존 값은 보존.
+  - 입력 단계에서는 검증 안 함 — Step C에서 *최종 일괄 검증*.
+- `setup-report.md`에 *Changed fields* / *Unchanged fields* 섹션 분리 — 무엇이 바뀌었는지 한눈에.
+
+### Why
+- 일부 필드만 갱신하려고 전체 12+ 항목을 다시 입력하는 부담 제거.
+- 토큰 같은 시크릿을 *불필요하게 다시 노출*시키지 않음(엔터 한 번 = 안전 유지).
+- 형식 오류로 한 필드가 막혀도 다른 정상 항목들을 잃지 않음.
+
 ## [1.0.5] — 2026-05-27
 
 ### Added
