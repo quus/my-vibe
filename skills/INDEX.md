@@ -1,6 +1,6 @@
-# vibecode_base Skill Suite — `mv-*` 11종
+# vibecode_base Skill Suite — `mv-*` 12종
 
-> vibecode_base 방법론(`/home/kwshim/workspace/vibecode_base/`)의 *전 과정*을 자동화하는 11개 Skill 묶음.
+> vibecode_base 방법론(`/home/kwshim/workspace/vibecode_base/`)의 *전 과정*을 자동화하는 12개 Skill 묶음.
 > 모든 스킬은 한국어·영어 트리거 모두 지원하며, 결과를 *파일과 Jira 양쪽*에 남겨 추적성을 보장.
 
 ---
@@ -9,6 +9,7 @@
 
 | # | Skill | Phase | 역할 |
 |---|---|---|---|
+| 0 | `mv-setup` | setup | Jira·GitHub 연결정보 대화형 수집·검증·`.env` 생성 (전제 조건) |
 | 1 | `mv-feature-upsert` | 0a-0c | Requirements MD → Epic/Story 자동 확장 → Jira upsert |
 | 2 | `mv-backlog-prioritize` | 0d | MoSCoW/RICE/WSJF로 백로그 우선순위·랭크·라벨 |
 | 3 | `mv-arch-from-jira` | 0.5 | Jira → C4 ARCHITECTURE.md + ADR + Tech Story |
@@ -23,9 +24,13 @@
 
 ---
 
-## 2. 표준 흐름 — 11단계
+## 2. 표준 흐름 — 12단계
 
 ```
+(처음 1회)
+/mv-setup → .env + 연결 검증 + setup-report.md
+  │
+  ▼
 요구 텍스트
   │
   │ /mv-feature-upsert
@@ -66,19 +71,20 @@ ARCHITECTURE.md + adr/*.md + Jira Tech Stories
 
 ## 3. Chaining Matrix
 
-| 선행 ↓ → 후행 | upsert | prio | arch | plan | red | impl | review | verify | release | incident | retro |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| `mv-feature-upsert` | — | ✅ | ✅ | — | — | — | — | — | — | — | — |
-| `mv-backlog-prioritize` | — | — | ✅ | ✅ | ✅ | — | — | — | — | — | — |
-| `mv-arch-from-jira` | — | — | — | ✅ | ✅ | ✅ | — | — | — | — | — |
-| `mv-sprint-plan` | — | — | — | — | ✅ | — | — | — | — | — | — |
-| `mv-tdd-redgen` | — | — | — | — | — | ✅ | — | — | — | — | — |
-| `mv-tdd-impl` | — | — | — | — | — | — | ✅ | ✅ | — | — | — |
-| `mv-pr-review` | — | — | — | — | — | — | — | ✅ | — | — | — |
-| `mv-verify-merge` | — | — | — | — | — | — | — | — | ✅ | — | — |
-| `mv-release` | — | — | — | — | — | — | — | — | — | — | ✅ |
-| `mv-incident-to-test` | — | — | — | — | — | — | ✅ | ✅ | ✅ | — | — |
-| `mv-sprint-retro` | — | — | — | ✅ | — | — | — | — | — | — | — |
+| 선행 ↓ → 후행 | setup | upsert | prio | arch | plan | red | impl | review | verify | release | incident | retro |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `mv-setup` | — | ✅ | — | — | — | — | — | — | — | — | — | — |
+| `mv-feature-upsert` | — | — | ✅ | ✅ | — | — | — | — | — | — | — | — |
+| `mv-backlog-prioritize` | — | — | — | ✅ | ✅ | ✅ | — | — | — | — | — | — |
+| `mv-arch-from-jira` | — | — | — | — | ✅ | ✅ | ✅ | — | — | — | — | — |
+| `mv-sprint-plan` | — | — | — | — | — | ✅ | — | — | — | — | — | — |
+| `mv-tdd-redgen` | — | — | — | — | — | — | ✅ | — | — | — | — | — |
+| `mv-tdd-impl` | — | — | — | — | — | — | — | ✅ | ✅ | — | — | — |
+| `mv-pr-review` | — | — | — | — | — | — | — | — | ✅ | — | — | — |
+| `mv-verify-merge` | — | — | — | — | — | — | — | — | — | ✅ | — | — |
+| `mv-release` | — | — | — | — | — | — | — | — | — | — | — | ✅ |
+| `mv-incident-to-test` | — | — | — | — | — | — | — | ✅ | ✅ | ✅ | — | — |
+| `mv-sprint-retro` | — | — | — | — | ✅ | — | — | — | — | — | — | — |
 
 ✅ = 직후 일반적인 다음 스킬.
 

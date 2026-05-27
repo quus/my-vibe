@@ -3,6 +3,27 @@
 All notable changes to **my-vibe** will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.0.5] — 2026-05-27
+
+### Added
+- 신규 스킬 **`mv-setup`** (Phase: setup, *모든 mv-* 스킬의 전제 조건*):
+  - Jira 연결정보 4종(JIRA_BASE_URL · JIRA_EMAIL · JIRA_API_TOKEN · JIRA_PROJECT_KEY) 대화형 수집.
+  - GitHub 인증 3가지 옵션 (SSH 권장 / PAT / gh CLI) + GITHUB_REPO.
+  - 실시간 검증: `curl /rest/api/3/myself`로 Jira, `ssh -T` 또는 `curl /user`로 GitHub.
+  - `.env` (chmod 600, gitignored) + `.env.example` (committed) + `.gitignore` 항목 자동 갱신.
+  - `./setup-report.md` 생성 — 통과/실패 항목 + 다음 단계 안내.
+  - 멱등 — 재실행 시 기존 값 백업(`.env.bak.<ts>`) + 변경 항목만 갱신.
+
+### Changed
+- INDEX 카탈로그: 11종 → **12종**. `mv-setup`을 `#0`(phase=setup)으로 표 맨 위에 배치.
+- 표준 흐름 다이어그램에 *처음 1회 mv-setup* 단계 추가.
+- 체이닝 매트릭스에 setup 열/행 추가: `mv-setup` → `mv-feature-upsert`로 연결.
+- Tarball: `my-vibe-1.0.5.tgz` (SHA256 갱신).
+
+### Security
+- 토큰 *마스킹* 정책 명시: 모든 출력에서 마지막 4자만 노출.
+- `.env` 쓰기 전 `.gitignore` 사전 확인 게이트.
+
 ## [1.0.4] — 2026-05-27
 
 ### Added
