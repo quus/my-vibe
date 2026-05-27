@@ -1,4 +1,4 @@
-# vibecode — Claude Code SDLC Skill Suite
+# my-vibe — Claude Code SDLC Skill Suite
 
 > **요구사항 → Jira → 아키텍처 → TDD → 리뷰 → 머지 → 릴리스 → 회고**까지,
 > 소프트웨어 개발의 *전 과정*을 자동화하는 10개 vc-* 스킬 패키지.
@@ -34,8 +34,8 @@
 ### 2.1 로컬 설치 (개발자 본인)
 
 ```bash
-git clone https://github.com/kwshim/vibecode-plugin.git
-cd vibecode-plugin
+git clone https://github.com/quus/my-vibe.git
+cd my-vibe
 ./install.sh
 ```
 
@@ -49,8 +49,8 @@ cd vibecode-plugin
 ### 2.2 Tarball 설치 (배포 산출물)
 
 ```bash
-tar -xzf vibecode-1.0.0.tgz
-cd vibecode-1.0.0
+tar -xzf my-vibe-1.0.0.tgz
+cd my-vibe-1.0.0
 ./install.sh
 ```
 

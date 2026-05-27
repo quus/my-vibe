@@ -1,6 +1,6 @@
 {
-  "name": "vibecode",
-  "displayName": "vibecode — Claude Code SDLC Skill Suite",
+  "name": "my-vibe",
+  "displayName": "my-vibe — Claude Code SDLC Skill Suite",
   "version": "1.0.0",
   "description": "Requirements → Jira → Architecture → TDD → Review → Merge → Release → Retro. 10개 vc-* 스킬로 소프트웨어 개발 전 과정을 자동화하는 vibecode_base 방법론 패키지.",
   "license": "MIT",
@@ -8,10 +8,10 @@
     "name": "kwshim",
     "email": "kusim31@gmail.com"
   },
-  "homepage": "https://github.com/kwshim/vibecode-plugin",
+  "homepage": "https://github.com/quus/my-vibe",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kwshim/vibecode-plugin.git"
+    "url": "git+https://github.com/quus/my-vibe.git"
   },
   "keywords": [
     "claude-code",

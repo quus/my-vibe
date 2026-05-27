@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to **vibecode** will be documented in this file.
+All notable changes to **my-vibe** will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
 ## [1.0.0] — 2026-05-27
@@ -20,7 +20,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 - `install.sh` / `uninstall.sh` — symlink 기반 설치/제거
 - `plugin.json` 매니페스트
 - `README.md` 사용 안내
-- 배포용 tarball (`dist/vibecode-1.0.0.tgz`) + SHA256
+- 배포용 tarball (`dist/my-vibe-1.0.0.tgz`) + SHA256
 
 ### References
 - Based on methodology: [vibecode_base](../vibecode_base/) (Phase 0 → 0.5 → 1~5 + TDD)

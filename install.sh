@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# vibecode plugin installer
+# my-vibe plugin installer
 # Usage:
 #   ./install.sh              # symlink (default)
 #   ./install.sh --copy       # copy files instead
@@ -14,9 +14,9 @@ PREFIX="${HOME}/.claude/skills"
 DRY=0
 DO_UNINSTALL=0
 
-log()  { printf "\033[1;34m[vibecode]\033[0m %s\n" "$*"; }
-warn() { printf "\033[1;33m[vibecode]\033[0m %s\n" "$*" >&2; }
-err()  { printf "\033[1;31m[vibecode]\033[0m %s\n" "$*" >&2; }
+log()  { printf "\033[1;34m[my-vibe]\033[0m %s\n" "$*"; }
+warn() { printf "\033[1;33m[my-vibe]\033[0m %s\n" "$*" >&2; }
+err()  { printf "\033[1;31m[my-vibe]\033[0m %s\n" "$*" >&2; }
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -44,7 +44,7 @@ skill_names() {
 }
 
 if [[ "$DO_UNINSTALL" == "1" ]]; then
-  log "Uninstalling vibecode skills from $PREFIX"
+  log "Uninstalling my-vibe skills from $PREFIX"
   for n in $(skill_names); do
     target="$PREFIX/$n"
     if [[ -L "$target" || -e "$target" ]]; then
@@ -60,7 +60,7 @@ if [[ "$DO_UNINSTALL" == "1" ]]; then
   exit 0
 fi
 
-log "Installing vibecode plugin"
+log "Installing my-vibe plugin"
 log "  source : $PKG_DIR"
 log "  target : $PREFIX"
 log "  mode   : $MODE"
