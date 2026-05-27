@@ -4,9 +4,9 @@
 > 소프트웨어 개발의 *전 과정*을 자동화하는 10개 mv-* 스킬 패키지.
 > [vibecode_base 방법론](../vibecode_base/) 위에 동작합니다.
 
-[![Version](https://img.shields.io/badge/version-1.0.3-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.0.4-blue.svg)](./CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
-[![Skills](https://img.shields.io/badge/skills-10-green.svg)](./skills/INDEX.md)
+[![Skills](https://img.shields.io/badge/skills-11-green.svg)](./skills/INDEX.md)
 
 ---
 
@@ -17,6 +17,7 @@
 | 백로그 | `mv-feature-upsert` | "기능 등록", "feature upsert" |
 | 우선순위 | `mv-backlog-prioritize` | "백로그 우선순위", "RICE" |
 | 아키텍처 | `mv-arch-from-jira` | "아키텍처 수립", "C4 작성" |
+| 스프린트 계획 | `mv-sprint-plan` | "스프린트 계획", "다음 스프린트" |
 | RED | `mv-tdd-redgen` | "tdd red", "실패 테스트" |
 | GREEN/REFACTOR | `mv-tdd-impl` | "구현 시작", "worktree 구현" |
 | 리뷰 | `mv-pr-review` | "리뷰 돌려", "5-lane review" |

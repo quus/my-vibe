@@ -1,6 +1,6 @@
-# vibecode_base Skill Suite — `mv-*` 10종
+# vibecode_base Skill Suite — `mv-*` 11종
 
-> vibecode_base 방법론(`/home/kwshim/workspace/vibecode_base/`)의 *전 과정*을 자동화하는 10개 Skill 묶음.
+> vibecode_base 방법론(`/home/kwshim/workspace/vibecode_base/`)의 *전 과정*을 자동화하는 11개 Skill 묶음.
 > 모든 스킬은 한국어·영어 트리거 모두 지원하며, 결과를 *파일과 Jira 양쪽*에 남겨 추적성을 보장.
 
 ---
@@ -12,13 +12,14 @@
 | 1 | `mv-feature-upsert` | 0a-0c | Requirements MD → Epic/Story 자동 확장 → Jira upsert |
 | 2 | `mv-backlog-prioritize` | 0d | MoSCoW/RICE/WSJF로 백로그 우선순위·랭크·라벨 |
 | 3 | `mv-arch-from-jira` | 0.5 | Jira → C4 ARCHITECTURE.md + ADR + Tech Story |
-| 4 | `mv-tdd-redgen` | 4 RED | 다음 Story → AC별 실패 테스트 생성 |
-| 5 | `mv-tdd-impl` | 4 GREEN+REFACTOR | Worktree에서 컨벤션·아키 지키며 구현 |
-| 6 | `mv-pr-review` | 5 | 5-레인 병렬 리뷰 (style/quality/api/security/perf) |
-| 7 | `mv-verify-merge` | 5 | 전체 게이트 + AC 매핑 + 머지 |
-| 8 | `mv-release` | post-5 | 태그·스모크·카나리·롤백 + Jira Epic Done |
-| 9 | `mv-incident-to-test` | 회귀 방지 | 프로덕션 버그 → 재현 RED → 픽스 → 영구 회귀 |
-| 10 | `mv-sprint-retro` | 학습 루프 | 스프린트 지표·ADR 델타·다음 용량 보정 |
+| 4 | `mv-sprint-plan` | 0.7 | 응집도 + velocity 기반 스프린트 구성 + Jira Sprint 생성 |
+| 5 | `mv-tdd-redgen` | 4 RED | 다음 Story → AC별 실패 테스트 생성 |
+| 6 | `mv-tdd-impl` | 4 GREEN+REFACTOR | Worktree에서 컨벤션·아키 지키며 구현 |
+| 7 | `mv-pr-review` | 5 | 5-레인 병렬 리뷰 (style/quality/api/security/perf) |
+| 8 | `mv-verify-merge` | 5 | 전체 게이트 + AC 매핑 + 머지 |
+| 9 | `mv-release` | post-5 | 태그·스모크·카나리·롤백 + Jira Epic Done |
+| 10 | `mv-incident-to-test` | 회귀 방지 | 프로덕션 버그 → 재현 RED → 픽스 → 영구 회귀 |
+| 11 | `mv-sprint-retro` | 학습 루프 | 스프린트 지표·ADR 델타·다음 용량 보정 |
 
 ---
 
@@ -38,6 +39,10 @@ FEATURES.md + jira/{epics,stories}/*.md ──▶ Jira
   │ /mv-arch-from-jira
   ▼
 ARCHITECTURE.md + adr/*.md + Jira Tech Stories
+  │
+  │ /mv-sprint-plan (스프린트 시작 시점마다)
+  ▼
+응집도 클러스터 → Jira Sprint(Future) + ./sprints/<id>.md
   │
   ▼ (Story 1개씩 반복)
   ┌───────────────────────────────────────────┐
@@ -61,17 +66,19 @@ ARCHITECTURE.md + adr/*.md + Jira Tech Stories
 
 ## 3. Chaining Matrix
 
-| 선행 ↓ → 후행 | upsert | prio | arch | red | impl | review | verify | release | incident | retro |
-|---|---|---|---|---|---|---|---|---|---|---|
-| `mv-feature-upsert` | — | ✅ | ✅ | — | — | — | — | — | — | — |
-| `mv-backlog-prioritize` | — | — | ✅ | ✅ | — | — | — | — | — | — |
-| `mv-arch-from-jira` | — | — | — | ✅ | ✅ | — | — | — | — | — |
-| `mv-tdd-redgen` | — | — | — | — | ✅ | — | — | — | — | — |
-| `mv-tdd-impl` | — | — | — | — | — | ✅ | ✅ | — | — | — |
-| `mv-pr-review` | — | — | — | — | — | — | ✅ | — | — | — |
-| `mv-verify-merge` | — | — | — | — | — | — | — | ✅ | — | — |
-| `mv-release` | — | — | — | — | — | — | — | — | — | ✅ |
-| `mv-incident-to-test` | — | — | — | — | — | ✅ | ✅ | ✅ | — | — |
+| 선행 ↓ → 후행 | upsert | prio | arch | plan | red | impl | review | verify | release | incident | retro |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| `mv-feature-upsert` | — | ✅ | ✅ | — | — | — | — | — | — | — | — |
+| `mv-backlog-prioritize` | — | — | ✅ | ✅ | ✅ | — | — | — | — | — | — |
+| `mv-arch-from-jira` | — | — | — | ✅ | ✅ | ✅ | — | — | — | — | — |
+| `mv-sprint-plan` | — | — | — | — | ✅ | — | — | — | — | — | — |
+| `mv-tdd-redgen` | — | — | — | — | — | ✅ | — | — | — | — | — |
+| `mv-tdd-impl` | — | — | — | — | — | — | ✅ | ✅ | — | — | — |
+| `mv-pr-review` | — | — | — | — | — | — | — | ✅ | — | — | — |
+| `mv-verify-merge` | — | — | — | — | — | — | — | — | ✅ | — | — |
+| `mv-release` | — | — | — | — | — | — | — | — | — | — | ✅ |
+| `mv-incident-to-test` | — | — | — | — | — | — | ✅ | ✅ | ✅ | — | — |
+| `mv-sprint-retro` | — | — | — | ✅ | — | — | — | — | — | — | — |
 
 ✅ = 직후 일반적인 다음 스킬.
 

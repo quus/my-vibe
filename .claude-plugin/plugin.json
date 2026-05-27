@@ -1,7 +1,7 @@
 {
   "name": "my-vibe",
-  "description": "10 mv-* skills covering the full SDLC: Requirements → Jira → Architecture → TDD → Review → Merge → Release → Retro.",
-  "version": "1.0.3",
+  "description": "11 mv-* skills covering the full SDLC: Requirements → Jira → Architecture → Sprint Plan → TDD → Review → Merge → Release → Retro.",
+  "version": "1.0.4",
   "author": {
     "name": "kwshim",
     "email": "kusim31@gmail.com"

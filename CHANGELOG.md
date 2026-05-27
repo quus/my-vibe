@@ -3,6 +3,25 @@
 All notable changes to **my-vibe** will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.0.4] — 2026-05-27
+
+### Added
+- 신규 스킬 **`mv-sprint-plan`** (Phase 0.7):
+  - 전체 백로그 + FEATURES.md를 읽어 응집도(같은 Epic·컴포넌트·의존성·Persona·Theme) 기반 클러스터링.
+  - 직전 3 스프린트 velocity × 0.85 buffer로 용량 계산.
+  - Greedy + WIP-aware 선택 알고리즘 → 데모 가능한 클러스터만 포함.
+  - Jira Sprint(Future 상태) 생성 + Story 할당 + `./sprints/<id>.md` 생성.
+  - 사람 사인오프 게이트 전까지 Sprint 활성화 금지.
+- INDEX 카탈로그 10종 → **11종**. Phase 순서 0a → 0d → 0.5 → **0.7** → 4 → 5 → post-5 → 회귀 → 학습.
+
+### Changed
+- 체이닝 매트릭스에 `mv-sprint-plan` 행/열 추가:
+  - `mv-backlog-prioritize` → `mv-sprint-plan` (Story 점수가 입력)
+  - `mv-arch-from-jira` → `mv-sprint-plan` (컴포넌트 경계가 응집도 입력)
+  - `mv-sprint-plan` → `mv-tdd-redgen` (스프린트 내 Story가 차례로 픽업)
+  - `mv-sprint-retro` → `mv-sprint-plan` (velocity 피드백)
+- Tarball: `my-vibe-1.0.4.tgz` (SHA256 갱신).
+
 ## [1.0.3] — 2026-05-27
 
 ### Fixed

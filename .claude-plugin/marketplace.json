@@ -12,8 +12,8 @@
         "source": "github",
         "repo": "quus/my-vibe"
       },
-      "description": "10 mv-* skills covering the full SDLC: Requirements → Jira → Architecture → TDD → Review → Merge → Release → Retro.",
-      "version": "1.0.3",
+      "description": "11 mv-* skills covering the full SDLC: Requirements → Jira → Architecture → Sprint Plan → TDD → Review → Merge → Release → Retro.",
+      "version": "1.0.4",
       "homepage": "https://github.com/quus/my-vibe",
       "license": "MIT",
       "tags": [
