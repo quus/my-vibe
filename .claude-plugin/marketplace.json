@@ -1,0 +1,28 @@
+{
+  "name": "my-vibe",
+  "owner": {
+    "name": "kwshim",
+    "email": "kusim31@gmail.com",
+    "url": "https://github.com/quus"
+  },
+  "plugins": [
+    {
+      "name": "my-vibe",
+      "source": {
+        "type": "git",
+        "repo": "quus/my-vibe"
+      },
+      "description": "10 mv-* skills covering the full SDLC: Requirements → Jira → Architecture → TDD → Review → Merge → Release → Retro.",
+      "version": "1.0.1",
+      "homepage": "https://github.com/quus/my-vibe",
+      "license": "MIT",
+      "tags": [
+        "sdlc",
+        "tdd",
+        "jira",
+        "architecture",
+        "korean"
+      ]
+    }
+  ]
+}

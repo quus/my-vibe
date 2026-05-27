@@ -3,6 +3,22 @@
 All notable changes to **my-vibe** will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.0.1] — 2026-05-27
+
+### Added
+- `.claude-plugin/plugin.json` — Claude Code 마켓플레이스 호환 매니페스트 위치.
+- `.claude-plugin/marketplace.json` — 단일 플러그인 카탈로그 정의.
+- README §2.1에 *마켓플레이스 설치* 안내 추가:
+  - `/plugin marketplace add quus/my-vibe`
+  - `/plugin install my-vibe@my-vibe`
+
+### Changed
+- `plugin.json`을 루트에서 `.claude-plugin/` 아래로 이동. version 1.0.1로 bump.
+- 배포용 tarball: `my-vibe-1.0.1.tgz` (SHA256 갱신).
+
+### Notes
+- 기존 `install.sh` 심볼릭 링크 설치는 *대안 경로*로 유지(오프라인/포크 사용 케이스).
+
 ## [1.0.0] — 2026-05-27
 
 ### Added

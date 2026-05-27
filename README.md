@@ -4,7 +4,7 @@
 > 소프트웨어 개발의 *전 과정*을 자동화하는 10개 mv-* 스킬 패키지.
 > [vibecode_base 방법론](../vibecode_base/) 위에 동작합니다.
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](./CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Skills](https://img.shields.io/badge/skills-10-green.svg)](./skills/INDEX.md)
 
@@ -31,7 +31,32 @@
 
 ## 2. 설치
 
-### 2.1 로컬 설치 (개발자 본인)
+### 2.1 Claude Code 마켓플레이스 (권장)
+
+Claude Code 세션에서:
+```
+/plugin marketplace add quus/my-vibe
+/plugin install my-vibe@my-vibe
+```
+
+특정 태그를 고정하려면:
+```
+/plugin marketplace add https://github.com/quus/my-vibe.git#v1.0.1
+```
+
+마켓플레이스를 팀 표준으로 두려면 `.claude/settings.json`에:
+```json
+{
+  "extraKnownMarketplaces": {
+    "my-vibe": {
+      "source": { "source": "github", "repo": "quus/my-vibe" }
+    }
+  },
+  "enabledPlugins": { "my-vibe@my-vibe": true }
+}
+```
+
+### 2.2 로컬 설치 — install.sh (오프라인/포크/개발자 본인)
 
 ```bash
 git clone https://github.com/quus/my-vibe.git
@@ -46,11 +71,11 @@ cd my-vibe
 - `./install.sh --prefix /custom/path` — 다른 경로에 설치
 - `./install.sh --uninstall` — 즉시 제거
 
-### 2.2 Tarball 설치 (배포 산출물)
+### 2.3 Tarball 설치 (배포 산출물 / 에어갭)
 
 ```bash
-tar -xzf my-vibe-1.0.0.tgz
-cd my-vibe-1.0.0
+tar -xzf my-vibe-1.0.1.tgz
+cd my-vibe-1.0.1
 ./install.sh
 ```
 
@@ -59,7 +84,7 @@ cd my-vibe-1.0.0
 sha256sum -c dist/SHA256SUMS
 ```
 
-### 2.3 검증
+### 2.4 검증
 ```bash
 ls ~/.claude/skills/ | grep '^mv-'
 # mv-arch-from-jira  mv-backlog-prioritize ... (10개)
