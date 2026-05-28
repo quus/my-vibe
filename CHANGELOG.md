@@ -3,6 +3,19 @@
 All notable changes to **my-vibe** will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.1.1] — 2026-05-28
+
+### Changed
+- **`mv-sprint-run` 최신 inbox본(21:51) 반영·발행**:
+  - inbox 요청서가 다시 갱신(187→248줄)됨 — 패키지 본문을 그 상위집합으로 정리
+    (요청서 마커 제거, §8 When NOT to use / §9 Chains / §10 References 보강).
+  - v1.1.0까지는 작업트리에만 있고 미발행 상태였던 변경을 정식 릴리스로 커밋.
+- inbox 반영 검증 완료: `mv-sprint-plan`(v1.0.9 발행, §6 기준 4/4) + `mv-sprint-run`(이번 발행).
+
+### Note
+- 콘텐츠 변경만(스킬 수 13 유지, MCP/hooks 변경 없음). patch bump.
+- Tarball: `my-vibe-1.1.1.tgz` (SHA256 갱신).
+
 ## [1.1.0] — 2026-05-28
 
 ### Added

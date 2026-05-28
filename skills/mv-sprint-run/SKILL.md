@@ -3,7 +3,7 @@ name: mv-sprint-run
 description: 스크럼 마스터로서 Sprint 전체를 완결-기반(No Time Boxing)으로 오케스트레이션 — Pre-flight → Plan → PO 리뷰 → Architect 리뷰 → QA TDD Red → Dev TDD Green → 독립 Verifier 게이트 → PO 데모 Accept → 회고. 할당된 모든 Feature가 Verifier PASS를 받을 때까지 루프하며, 자기보고 PASS·Time Box 종료를 구조적으로 차단. mv-sprint-plan(계획만)과 달리 실행·검증까지 자동화. Trigger when user says "스프린트 실행", "sprint run", "스프린트 시작해", "sprint 진행", "스프린트 돌려".
 ---
 
-# mv-sprint-run — Completion-Driven Sprint Execution (v2.0)
+# mv-sprint-run — Completion-Driven Sprint Execution (v2.1)
 
 > 스크럼 마스터가 Sprint 전체를 오케스트레이션하되,
 > **할당된 Feature의 개발이 완결(검증 통과)될 때까지** 중단 없이 구동한다.
@@ -12,6 +12,13 @@ description: 스크럼 마스터로서 Sprint 전체를 완결-기반(No Time Bo
 > **v2.0 변경 사유**: v1.x 실전에서 스크럼 마스터가 Developer의 *자기 보고*("147 tests GREEN")만 믿고
 > Frontend 미통합·docker-compose 부재·E2E 미검증 상태로 Sprint를 "100% 완료" 종료한 사고 발생.
 > 근본 원인 = **Verifier 게이트 부재 + 시간 기반 종료**. 이를 v2.0에서 구조적으로 차단한다.
+>
+> **v2.1 변경 사유 (UI는 화면으로 검증)**: v2.0 게이트가 있었음에도, QA·Verifier가 UI를 **curl/유닛-mock**으로만
+> 검증해 *화면에서만 터지는* 결함이 사용자 테스트에서 발견됨 (예: 임포트 데이터의 `{role_level}` 객체를
+> React 자식으로 렌더 → "Minified React error #31"로 인력 화면 전체 크래시. curl·API 테스트·mock 유닛테스트는
+> 전부 GREEN이었음). 근본 원인 = **UI를 실제로 그려보지 않음 + mock이 실데이터 형태를 가림**.
+> v2.1은 **UI Story를 Playwright로 실 브라우저 화면을 띄워(육안/콘솔에러/실데이터) 검증**하고,
+> **테스트 케이스를 화면 기준으로 상세하게 구성**하도록 강제한다.
 
 ---
 
@@ -34,6 +41,15 @@ description: 스크럼 마스터로서 Sprint 전체를 완결-기반(No Time Bo
    - 백엔드 테스트만 GREEN인 것으로 완료 판정 금지.
    - Frontend 테스트 실제 실행, E2E 데모, 빌드/기동 가능 여부까지 모두 증거화.
 
+4. **UI는 화면으로 검증한다 (curl 금지) ★ v2.1**
+   - curl·API 테스트·유닛-mock은 *API 계약과 로직*만 본다. **화면에서만 터지는 결함**
+     (객체를 React 자식으로 렌더, CSS 미적용, 무한 리다이렉트, 빈 테이블, 깨진 컬럼, 콘솔 에러)은
+     절대 잡지 못한다 — curl 200 ≠ 화면 정상.
+   - 모든 **UI Story는 Playwright로 실 브라우저에서 화면을 띄워** 검증한다:
+     로그인 → 해당 화면 이동 → **실제 렌더 + 콘솔/페이지 에러 0 + 실데이터 표시 + 스크린샷**.
+   - **mock 데이터로만 통과 금지**: 컴포넌트 테스트의 mock은 실데이터 형태(중첩 객체/null/한글/빈배열)를
+     가린다. UI Story는 **실 API/DB 데이터로 1회 이상 화면 렌더**를 확인한다.
+
 ---
 
 ## 3. 소환되는 서브 에이전트 (역할 명확화)
@@ -43,12 +59,13 @@ description: 스크럼 마스터로서 Sprint 전체를 완결-기반(No Time Bo
 | **Scrum Master** | (본체 오케스트레이터) | opus | 전체 루프 제어, 에이전트 소환/반려, 게이트 판정, 커밋 | sprint state |
 | **Product Owner** | `analyst` | opus | Sprint Plan 검토(7기준 점수), 비즈니스 가치 판정, **Sprint Review 데모 Accept** | PO 판정서 |
 | **Architect** | `architect` | opus(첫)/sonnet(이후) | 신규/수정 파일 식별, ADR-Story 정합성, 기술 결정 | arch-review.md |
-| **QA Engineer** | `executor`/`test-engineer` | sonnet | AC별 **실패 테스트(Red)** 작성, 경계/네거티브 케이스, Frontend 테스트 포함 | 테스트 파일 |
+| **QA Engineer** | `test-engineer`/`executor` | sonnet | AC별 **실패 테스트(Red)** 작성, 경계/네거티브 케이스. **UI Story는 화면 기준 상세 테스트케이스 + Playwright E2E 시나리오** 작성 | 테스트 파일 + UI 테스트케이스 |
 | **Developer** | `deep-executor` | opus | 최소 코드로 Green, Refactor, 의존성 순서 구현 | 구현 코드 |
-| **Verifier** | `verifier` | sonnet(소)/opus(대) | **DoD 각 항목 독립 검증**, 증거 수집, PASS/FAIL 평결 | verify/*.log + 평결서 |
+| **Verifier** | `qa-tester`(UI)/`verifier`(로직) | sonnet(소)/opus(대) | **DoD 각 항목 독립 검증**, 증거 수집, PASS/FAIL 평결. **UI는 Playwright로 실 브라우저 화면 검증(curl 금지)** | verify/*.log + 스크린샷 + 평결서 |
 
 > 각 에이전트는 **자신의 역할만** 수행한다. Developer는 자기 코드를 검증하지 않는다(이해상충).
 > Verifier는 코드를 작성하지 않는다(독립성). 이 분리가 v1.x 사고의 핵심 방지책.
+> **UI Story 검증은 반드시 실 브라우저(Playwright)로 화면을 보고 한다 — curl/API 응답만으로 UI Done 판정 금지(v2.1).**
 
 ### 에이전트 모드 선택
 - **단순 Sprint** (기존 패턴 확장): QA+Developer 통합 가능. 단, **Verifier는 항상 분리**.
@@ -88,6 +105,34 @@ mv-sprint-run은 그 결과(승인된 MD + arch-review)를 *입력으로 신뢰*
 - **Red 패턴**: `NotImplementedError` 금지 → `assert result == expected`로 *의미있는 실패*
 - **Frontend 테스트도 실제 작성 + 실행 가능하게** (스텁/모킹 포함)
 
+#### ★ v2.1 — UI Story는 화면 기준으로 상세 테스트케이스 작성
+UI/화면이 있는 Story는 **컴포넌트 단위 테스트 + 화면(E2E) 테스트케이스**를 함께 만든다.
+화면 테스트케이스는 *화면별 → 요소별 → 상태별*로 빠짐없이 분해한다:
+
+```
+[화면 테스트케이스 템플릿 — UI Story마다]
+화면: <경로> (예: /resources 인력 목록)
+사전조건: 로그인 상태(역할: <role>), 실 데이터 N건 존재
+
+요소/영역별 검증:
+  □ 페이지 진입: URL 도달, 콘솔/페이지 에러 0, 무한 리다이렉트 없음
+  □ 레이아웃/스타일: CSS 적용됨(빈 스타일 아님), 사이드바/헤더 렌더
+  □ 데이터 영역(표/카드): 실데이터 행 ≥1 렌더, 각 컬럼 값 정상(객체/[object Object]/undefined 금지)
+  □ 컬럼/필드별: <컬럼명>마다 기대 포맷(badge/날짜/숫자/'—' placeholder)
+  □ 상호작용: 검색·필터·정렬·페이지네이션·행 클릭 동작
+  □ 폼(있으면): 입력·검증 에러·제출 성공/실패 토스트
+
+상태별 검증 (각각 화면으로 확인):
+  □ 로딩(skeleton)  □ 빈 상태(empty)  □ 에러 상태  □ 정상(실데이터)
+  □ 엣지: null/빈배열/중첩객체/긴 한글/특수문자(SG&A 등)/대량건수
+
+각 케이스 = Given(화면/데이터) → When(동작) → Then(보이는 결과) + 스크린샷
+```
+
+- **실데이터 형태로 검증**: mock은 실 API/DB가 주는 형태(중첩 객체, null, 한글, 빈배열)와 다를 수 있다.
+  최소 1개 케이스는 **실 API/DB 응답 형태**(또는 임포트된 실데이터)로 화면 렌더를 검증한다.
+- QA는 이 테스트케이스를 `sprints/sprint-<N>-ui-testcases.md`로 산출하고, 가능한 것은 Playwright 스크립트로 자동화한다.
+
 ### Step 5 — Developer TDD Green + Refactor (Developer)
 - 최소 코드로 Green → Refactor
 - 매 Story 후 전체 테스트 실행(회귀 확인)
@@ -106,10 +151,20 @@ Verifier는 Sprint DoD의 **모든 항목**을 증거로 확인:
 □ 커버리지 ≥ 목표          → coverage 리포트 출력
 □ 린트/타입 0 에러         → ruff/mypy/eslint 실행 로그
 □ 앱 기동 가능             → 서버/프론트 실제 기동 확인 (docker compose 또는 dev server)
-□ E2E/데모 시나리오 동작   → 실제 실행 결과 (curl/Playwright/스크린샷)
+□ 컨테이너 산출물 검증     → 서빙 CSS 컴파일됨(@tailwind 0, 번들>10KB), 엔드포인트 라이브
+□ ★ UI 화면 검증(Playwright) → 로그인 후 실 브라우저로 해당 화면 렌더 확인:
+                              · 콘솔/페이지 에러 0 (React #31 등 렌더 크래시 없음)
+                              · 실데이터 행 ≥1 표시 (mock 아님), 각 컬럼 값 정상
+                              · 화면 테스트케이스(Step 4) 각 상태(로딩/빈/에러/정상/엣지) 통과
+                              · 스크린샷 첨부.  **curl 200만으로 UI PASS 금지**
+□ E2E 시나리오 동작        → Playwright 실행 결과 (정상/엣지/회귀 시나리오)
 □ FEATURES.md Status 갱신  → 완료 Story가 Done인지 확인
 □ 회귀 없음                → 이전 Sprint 테스트 포함 전체 GREEN
 ```
+
+> **curl의 한계 (v2.1)**: curl은 HTTP 상태/JSON만 본다. 화면 렌더링·JS 실행·콘솔 에러를
+> 보지 못하므로 **UI Story를 curl로 검증하면 안 된다**. UI 항목은 반드시 `qa-tester`가
+> Playwright로 실 브라우저 화면을 띄워 검증한다. curl은 API(백엔드) Story 검증에만 사용한다.
 
 **게이트 판정**:
 - **모든 항목 PASS** → Step 7 진행 가능
@@ -118,6 +173,7 @@ Verifier는 Sprint DoD의 **모든 항목**을 증거로 확인:
   → **PASS할 때까지 루프 (Time Box 없음)**
 
 > Verifier는 "증거 없는 PASS"를 거부한다. "테스트 통과했다고 들었다"는 FAIL 처리.
+> **UI는 "스크린샷·콘솔에러 0·실데이터 렌더" 증거 없으면 FAIL (curl 200은 증거 아님).**
 
 ### Step 7 — Sprint Review 데모 (Product Owner Accept)
 - 스크럼 마스터가 Sprint Goal 데모 시나리오를 **실제 실행**
@@ -167,6 +223,8 @@ finalize_sprint()  # Step 8 — 여기 도달 = 진짜 완결
 - **Verifier 게이트 우회 금지** — Developer 자기보고로 종료 절대 불가.
 - **Time Box로 종료 금지** — 미완 Feature 있으면 무조건 루프 계속.
 - **Frontend "컴포넌트만 작성" → Done 금지** — 실제 기동/테스트 실행 증거 필수.
+- **★ UI Story를 curl로만 검증 금지 (v2.1)** — 반드시 Playwright로 실 브라우저 화면을 띄워 렌더·콘솔에러·실데이터 확인.
+- **★ mock 데이터로만 통과 금지 (v2.1)** — UI Story는 실 API/DB 데이터로 화면 렌더 1회 이상 확인(mock이 실결함 가림).
 - **Jira Key 수동 입력 금지** — 자동 추출.
 - **앱 셸 없는 UI Story 금지** — 진입점 선행 Story 강제.
 - **데모는 종료 전, Sprint 안에서** — 종료 후 데모로 갭 발견되는 사고 방지.
@@ -174,9 +232,9 @@ finalize_sprint()  # Step 8 — 여기 도달 = 진짜 완결
 
 ---
 
-## 7. v1.x → v2.0 변경 요약
+## 7. v1.x → v2.1 변경 요약
 
-| 항목 | v1.x (사고 발생) | v2.0 (수정) |
+| 항목 | v1.x (사고 발생) | v2.0 / v2.1 (수정) |
 |---|---|---|
 | 종료 기준 | 시간(2주) + 자기보고 | **모든 Feature Verifier PASS + PO Accept** |
 | Verifier | 없음 | **독립 게이트 강제 (Step 6)** |
@@ -184,6 +242,7 @@ finalize_sprint()  # Step 8 — 여기 도달 = 진짜 완결
 | 데모 시점 | 종료 후 | **종료 전 Sprint 내 (Step 7)** |
 | 미완 Feature | "100% 완료" 오보고 | **루프 계속, 종료 불가** |
 | 에이전트 역할 | 모호(Dev가 검증 겸함) | **6역할 분리, 검증 독립** |
+| **UI 검증 (v2.1)** | curl/API/mock만 → 화면 크래시 미적발 | **Playwright 실 브라우저 화면 검증 + 실데이터 렌더 + 화면 기준 상세 테스트케이스** |
 
 ---
 
@@ -199,6 +258,8 @@ finalize_sprint()  # Step 8 — 여기 도달 = 진짜 완결
 
 ## 10. References
 - v1.x 사고 기록: 본 프로젝트 Sprint 1~2 (Backend Done, Frontend 미통합 상태로 오종료)
-- my-vibe 가드레일: "자기보고 PASS 금지 — Verifier 평결 없이 진행 없음"
+- **v2.1 사고 기록: Sprint 5 — 임포트 `{role_level}` 객체를 React 자식으로 렌더 → React #31 화면 크래시.
+  curl·API 테스트·mock 유닛테스트 전부 GREEN이었으나 실 브라우저에서만 발견. → UI는 Playwright 화면 검증 강제.**
+- my-vibe 가드레일: "자기보고 PASS 금지 — Verifier 평결 없이 진행 없음", "UI는 curl 아닌 화면으로 검증"
 - `~/workspace/vibecode_base/docs/05-quality-gates.md` (Verifier 증거 기반 완료)
 - 선행 스킬: mv-feature-upsert → mv-backlog-prioritize → mv-arch-from-jira
