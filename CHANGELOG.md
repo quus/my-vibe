@@ -3,6 +3,30 @@
 All notable changes to **my-vibe** will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.0.8] — 2026-05-28
+
+### Changed
+- **`mv-sprint-run` v1.x → v2.0 (완결-기반 + 독립 Verifier 게이트)**:
+  - **No Time Boxing** — Sprint는 시간이 아니라 *할당된 모든 Feature가 Verifier PASS + PO 데모 Accept*를
+    받을 때 종료. 미완이 1개라도 있으면 Step 5~6 루프 계속.
+  - **Step 6 Verification Gate 신규 강제** — Developer 자기보고를 신뢰하지 않고 독립 `verifier`가
+    DoD 전 항목을 *증거*(pytest/npm test 로그, coverage, 린트, 앱 기동, E2E)로 확인. FAIL 시 반려·재작업.
+  - **6역할 분리** — Scrum Master / PO(`analyst`) / Architect / QA(`executor`·`test-engineer`) /
+    Developer(`deep-executor`) / **Verifier(`verifier`)**. Developer는 자기 코드 검증 금지(이해상충).
+  - **Frontend 실행 증거 필수** — "컴포넌트만 작성" Done 금지. npm test 실행 불가 시 FAIL.
+  - **데모는 종료 전 Sprint 내에서**(Step 7) — 종료 후 갭 발견 사고 방지.
+  - 8-Step 절차 + 완결 루프 의사코드 포함.
+
+### Why
+- v1.x 실전에서 스크럼 마스터가 Developer 자기보고("147 tests GREEN")만 믿고 Frontend 미통합·
+  docker-compose 부재·E2E 미검증 상태로 Sprint를 "100% 완료" 오종료한 사고. 근본 원인인
+  *Verifier 게이트 부재 + 시간 기반 종료*를 v2.0에서 구조적으로 차단.
+
+### Note
+- 카탈로그 수는 13종 유지(스킬 추가가 아니라 기존 `mv-sprint-run` 명세 개정).
+- frontmatter는 v2.0 설명으로 갱신(완결-기반·Verifier 게이트 반영).
+- Tarball: `my-vibe-1.0.8.tgz` (SHA256 갱신).
+
 ## [1.0.7] — 2026-05-28
 
 ### Added

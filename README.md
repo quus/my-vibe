@@ -4,7 +4,7 @@
 > 소프트웨어 개발의 *전 과정*을 자동화하는 10개 mv-* 스킬 패키지.
 > [vibecode_base 방법론](../vibecode_base/) 위에 동작합니다.
 
-[![Version](https://img.shields.io/badge/version-1.0.7-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.0.8-blue.svg)](./CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Skills](https://img.shields.io/badge/skills-13-green.svg)](./skills/INDEX.md)
 

@@ -21,7 +21,7 @@
 | 9 | `mv-release` | post-5 | 태그·스모크·카나리·롤백 + Jira Epic Done |
 | 10 | `mv-incident-to-test` | 회귀 방지 | 프로덕션 버그 → 재현 RED → 픽스 → 영구 회귀 |
 | 11 | `mv-sprint-retro` | 학습 루프 | 스프린트 지표·ADR 델타·다음 용량 보정 |
-| 12 | `mv-sprint-run` | Sprint 전체 | Plan→PO→Arch→QA Red→Dev Green→Refactor→Retro 원스톱 오케스트레이션 |
+| 12 | `mv-sprint-run` | Sprint 전체 | **완결-기반**(No Time Box) 오케스트레이션 — Plan→PO→Arch→QA Red→Dev Green→**독립 Verifier 게이트**→PO 데모 Accept→Retro. 모든 Feature Verifier PASS까지 루프 (v2.0) |
 
 ---
 
@@ -58,10 +58,11 @@ ARCHITECTURE.md + adr/*.md + Jira Tech Stories
   │ /mv-verify-merge → 증거 PASS + 머지        │
   └───────────────────────────────────────────┘
 
-  ★ 또는 한 번에 — /mv-sprint-run (오케스트레이터):
-    Plan → PO 리뷰 → Architect 리뷰 → QA Red → Dev Green
-        → Refactor → 검증/커밋 → 회고  (Step 0~7 자동)
-    위 스프린트 단위 단계(plan + 루프 + retro)를 스크럼 마스터가 통째로 진행.
+  ★ 또는 한 번에 — /mv-sprint-run (완결-기반 오케스트레이터, v2.0):
+    Pre-flight → Plan → PO 리뷰 → Architect 리뷰 → QA Red → Dev Green
+        → ★독립 Verifier 게이트(DoD 증거 확인) → PO 데모 Accept → 회고
+    Time Box 없음 — 모든 Feature가 Verifier PASS + PO Accept 받을 때까지 루프.
+    자기보고 PASS·시간 종료를 구조적으로 차단(v1.x 오종료 사고 방지).
   │
   │ (Epic 단위 묶음)
   │ /mv-release

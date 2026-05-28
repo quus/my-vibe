@@ -1,265 +1,205 @@
 ---
 name: mv-sprint-run
-description: 스크럼 마스터로서 Sprint 전체 사이클을 원스톱 오케스트레이션 — Sprint Plan 작성 → PO 리뷰 → Architect 리뷰 → QA TDD Red → Developer TDD Green → Refactor → 검증/커밋 → 회고. mv-sprint-plan(계획만)과 달리 *실행까지* 자동화. Trigger when user says "스프린트 실행", "sprint run", "스프린트 시작해", "sprint 진행", "스프린트 돌려".
+description: 스크럼 마스터로서 Sprint 전체를 완결-기반(No Time Boxing)으로 오케스트레이션 — Pre-flight → Plan → PO 리뷰 → Architect 리뷰 → QA TDD Red → Dev TDD Green → 독립 Verifier 게이트 → PO 데모 Accept → 회고. 할당된 모든 Feature가 Verifier PASS를 받을 때까지 루프하며, 자기보고 PASS·Time Box 종료를 구조적으로 차단. mv-sprint-plan(계획만)과 달리 실행·검증까지 자동화. Trigger when user says "스프린트 실행", "sprint run", "스프린트 시작해", "sprint 진행", "스프린트 돌려".
 ---
 
-# mv-sprint-run — Automated Sprint Execution (Plan → Dev → Retro)
+# mv-sprint-run — Completion-Driven Sprint Execution (v2.0)
 
-> 스크럼 마스터가 Sprint 전체 사이클을 오케스트레이션한다.
-> Sprint Plan 작성 → PO 리뷰 → Architect 리뷰 → QA TDD Red → Developer TDD Green → Refactor → 회고.
-> 2회 Sprint 실전 경험(Sprint 1: 31SP/7S, Sprint 2: 29SP/8S)에서 도출된 최적화된 프로세스.
+> 스크럼 마스터가 Sprint 전체를 오케스트레이션하되,
+> **할당된 Feature의 개발이 완결(검증 통과)될 때까지** 중단 없이 구동한다.
+> Time Boxing을 하지 않고, Definition of Done을 **독립 Verifier**가 증거로 확인해야만 종료한다.
+>
+> **v2.0 변경 사유**: v1.x 실전에서 스크럼 마스터가 Developer의 *자기 보고*("147 tests GREEN")만 믿고
+> Frontend 미통합·docker-compose 부재·E2E 미검증 상태로 Sprint를 "100% 완료" 종료한 사고 발생.
+> 근본 원인 = **Verifier 게이트 부재 + 시간 기반 종료**. 이를 v2.0에서 구조적으로 차단한다.
+
+---
 
 ## 1. Triggers
-- "스프린트 실행"
-- "sprint run"
-- "스프린트 시작해"
-- "sprint 진행"
-- "스프린트 돌려"
+- "스프린트 실행", "sprint run", "스프린트 시작해", "sprint 진행", "스프린트 돌려"
 
-## 2. Inputs
-- `JIRA_PROJECT_KEY` (env)
-- `./FEATURES.md` (백로그)
-- `./ARCHITECTURE.md` (아키텍처)
-- `./PLAN-candidate.md` (우선순위 — 없으면 `mv-backlog-prioritize` 먼저)
-- `./sprints/sprint-N-retro.md` (이전 Sprint 회고 — 있으면 교훈 반영)
-- Sprint 번호 (인자 또는 자동 감지)
+## 2. 핵심 원칙 (v2.0)
 
-## 3. 전제 조건 자동 검증 (Sprint 시작 전)
+1. **완결 기반 구동 (No Time Boxing)**
+   - Sprint는 "2주" 같은 시간으로 끝나지 않는다.
+   - 할당된 모든 Feature가 **Verifier PASS**를 받을 때까지 스크럼 마스터가 루프를 반복한다.
+   - 미완 Feature가 1개라도 있으면 Sprint는 종료되지 않는다 (DoD 위반 시 자동 재진입).
+
+2. **자기보고 PASS 절대 금지**
+   - Developer가 "테스트 통과"라고 말해도 그것은 *주장*일 뿐이다.
+   - 독립 **Verifier 에이전트**가 DoD 각 항목을 *증거*(실행 로그, 스크린샷, 명령 출력)로 확인해야 한다.
+   - Verifier가 FAIL한 항목은 Developer에게 반려 → 재작업 → 재검증 (PASS까지 반복).
+
+3. **검증은 "쉬운 것"이 아니라 "DoD 전부"**
+   - 백엔드 테스트만 GREEN인 것으로 완료 판정 금지.
+   - Frontend 테스트 실제 실행, E2E 데모, 빌드/기동 가능 여부까지 모두 증거화.
+
+---
+
+## 3. 소환되는 서브 에이전트 (역할 명확화)
+
+| 에이전트 | subagent_type | 모델 | 책임 (Responsibility) | 산출물(증거) |
+|---|---|---|---|---|
+| **Scrum Master** | (본체 오케스트레이터) | opus | 전체 루프 제어, 에이전트 소환/반려, 게이트 판정, 커밋 | sprint state |
+| **Product Owner** | `analyst` | opus | Sprint Plan 검토(7기준 점수), 비즈니스 가치 판정, **Sprint Review 데모 Accept** | PO 판정서 |
+| **Architect** | `architect` | opus(첫)/sonnet(이후) | 신규/수정 파일 식별, ADR-Story 정합성, 기술 결정 | arch-review.md |
+| **QA Engineer** | `executor`/`test-engineer` | sonnet | AC별 **실패 테스트(Red)** 작성, 경계/네거티브 케이스, Frontend 테스트 포함 | 테스트 파일 |
+| **Developer** | `deep-executor` | opus | 최소 코드로 Green, Refactor, 의존성 순서 구현 | 구현 코드 |
+| **Verifier** | `verifier` | sonnet(소)/opus(대) | **DoD 각 항목 독립 검증**, 증거 수집, PASS/FAIL 평결 | verify/*.log + 평결서 |
+
+> 각 에이전트는 **자신의 역할만** 수행한다. Developer는 자기 코드를 검증하지 않는다(이해상충).
+> Verifier는 코드를 작성하지 않는다(독립성). 이 분리가 v1.x 사고의 핵심 방지책.
+
+### 에이전트 모드 선택
+- **단순 Sprint** (기존 패턴 확장): QA+Developer 통합 가능. 단, **Verifier는 항상 분리**.
+- **복잡 Sprint** (신규 도메인/아키텍처 변경): QA·Developer·Verifier 모두 분리.
+
+---
+
+## 4. Procedure (8-Step, 완결까지 루프)
+
+### Step 0 — Pre-flight Check (Scrum Master)
+시작 전 자동 검증 (하나라도 실패 시 사람에게 알림 후 대기):
+- [ ] `.env` + Jira 연결 확인
+- [ ] `FEATURES.md`, `ARCHITECTURE.md` 존재
+- [ ] 이전 Sprint 전체 테스트 GREEN (회귀 확인)
+- [ ] **Frontend 빌드 환경 확인**: `node_modules` 존재 + `npm test` 1회 실행 가능 (없으면 `npm install`)
+- [ ] 이전 retro의 Try 항목 반영 여부
+- [ ] **이전 Sprint carryover(미완 Feature) 우선 편입**
+
+### Step 1 — Sprint Plan (Scrum Master)
+- 할당 Feature 선정 (PLAN-candidate.md 우선순위 + carryover)
+- **Jira Key는 `jira/stories/*.md`에서 자동 추출** (수동 입력 금지)
+- SP 합계 자동 계산·검증
+- **Story 분해 검증**: UI 기능은 *앱 셸/진입점*이 선행 Story로 존재하는지 확인 (없으면 추가)
+- Sprint Goal = 데모 가능한 문장
+- **DoD를 검증 가능한 체크리스트로 명시** (각 항목 = Verifier가 확인할 증거 형태)
+
+### Step 2 — PO Review (Product Owner)
+- 7기준 점수 + Accept/Conditions/Reject
+- 범위 변경 < 20% → Step 3과 병렬 / ≥ 20% → 순차
+- **루프**: Conditions → Scrum Master 수정 → 재검토 (Accept까지)
+
+### Step 3 — Architect Review (Architect)
+- 신규/수정 파일, ADR-Story 정합성, 기술 결정
+- 출력은 QA가 테스트로 바로 변환 가능한 `[ ] 검증조건` 형식
+
+### Step 4 — QA TDD Red (QA Engineer)
+- AC당 ≥1 테스트, 네거티브/경계 포함
+- **Red 패턴**: `NotImplementedError` 금지 → `assert result == expected`로 *의미있는 실패*
+- **Frontend 테스트도 실제 작성 + 실행 가능하게** (스텁/모킹 포함)
+
+### Step 5 — Developer TDD Green + Refactor (Developer)
+- 최소 코드로 Green → Refactor
+- 매 Story 후 전체 테스트 실행(회귀 확인)
+- 테스트 파일 수정 금지
+
+### Step 6 — **Verification Gate (Verifier) ★ 신규 강제 게이트**
+
+스크럼 마스터는 Developer 완료 보고를 **신뢰하지 않는다.** 독립 Verifier를 소환한다.
+
+Verifier는 Sprint DoD의 **모든 항목**을 증거로 확인:
 
 ```
-Step 0 — Pre-flight Check
-```
-자동 검증 항목 (하나라도 실패 시 사람에게 알림 후 대기):
-- [ ] `.env` 파일 존재 + Jira 연결 확인
-- [ ] `FEATURES.md` 존재
-- [ ] `ARCHITECTURE.md` 존재
-- [ ] 이전 Sprint 테스트 전체 GREEN (회귀 확인)
-- [ ] Frontend `node_modules/` 존재 (없으면 `npm install` 실행)
-- [ ] 이전 Sprint retro의 "시도할 것(Try)" 항목을 현재 Sprint에 반영했는지 체크
-
-## 4. Procedure (7-Step)
-
-### Step 1 — Sprint Plan 작성 (Scrum Master)
-
-**입력**: PLAN-candidate.md, 이전 Sprint retro, 팀 velocity
-**출력**: `sprints/sprint-N-plan.md`
-
-규칙:
-- 이전 Sprint velocity 기반 SP 계획 (첫 Sprint: 30SP 가정)
-- Jira Key는 `jira/stories/*.md` 파일에서 **자동 추출** (수동 입력 금지)
-- SP 합계 자동 계산 + 검증
-- Sprint Goal은 측정 가능한 문장 (데모 가능해야 함)
-- 의존성 그래프 Mermaid 포함
-- Sprint Review 데모 시나리오 포함
-- "의도적 제외" 목록 포함
-
-**Jira Key 자동 매핑 방법**:
-```bash
-# Feature ID → Jira Key 매핑 추출
-for f in jira/stories/F-0XX-*.md; do
-  grep -m1 "Jira Key" "$f" | sed 's/.*`\(ERP-[0-9]*\)`.*/\1/'
-done
+[검증 체크리스트 — 각 항목 증거 필수]
+□ 백엔드 테스트 GREEN     → 실제 pytest 실행 로그 첨부
+□ Frontend 테스트 GREEN   → 실제 npm test 실행 로그 첨부 (실행 불가 시 FAIL)
+□ 커버리지 ≥ 목표          → coverage 리포트 출력
+□ 린트/타입 0 에러         → ruff/mypy/eslint 실행 로그
+□ 앱 기동 가능             → 서버/프론트 실제 기동 확인 (docker compose 또는 dev server)
+□ E2E/데모 시나리오 동작   → 실제 실행 결과 (curl/Playwright/스크린샷)
+□ FEATURES.md Status 갱신  → 완료 Story가 Done인지 확인
+□ 회귀 없음                → 이전 Sprint 테스트 포함 전체 GREEN
 ```
 
-### Step 2 — PO 리뷰 (Product Owner Agent)
+**게이트 판정**:
+- **모든 항목 PASS** → Step 7 진행 가능
+- **하나라도 FAIL** → 해당 Story를 Developer에게 반려 (Status: In Progress 유지)
+  → Step 5로 되돌아가 재작업 → 재검증
+  → **PASS할 때까지 루프 (Time Box 없음)**
 
-**에이전트**: `analyst` (opus)
-**입력**: sprint-N-plan.md, FEATURES.md, 이전 retro
-**출력**: Accept / Accept with Conditions / Reject + 점수표
+> Verifier는 "증거 없는 PASS"를 거부한다. "테스트 통과했다고 들었다"는 FAIL 처리.
 
-평가 기준 (7개, 각 1-5점):
-1. Sprint Goal 명확성
-2. 비즈니스 가치
-3. 범위 적절성 (velocity 대비)
-4. 의존성 관리
-5. 리스크 완화
-6. Definition of Done
-7. 이전 Sprint 교훈 반영
+### Step 7 — Sprint Review 데모 (Product Owner Accept)
+- 스크럼 마스터가 Sprint Goal 데모 시나리오를 **실제 실행**
+- PO가 사용자 관점에서 Accept/Reject
+- **PO Reject 시 → Step 5로 (미충족 부분 재작업)**
+- PO Accept 기록을 남겨야 종료 가능
 
-**리뷰 루프**:
-- Accept → Step 3으로
-- Accept with Conditions → Scrum Master가 수정 → PO 재검토 (최대 2회)
-- Reject → Sprint 범위 재구성
+### Step 8 — 종료 + 커밋 + 회고 (Scrum Master)
+종료 전제 (모두 충족해야 종료):
+- [ ] 할당된 **모든 Feature** Verifier PASS
+- [ ] PO 데모 Accept
+- [ ] FEATURES.md Status = Done (완료분)
+- [ ] 전체 테스트(누적) GREEN + 커버리지 목표
 
-**병렬화 기준**:
-- 범위 변경 < 20% (이전 Sprint 대비) → PO + Architect 병렬 실행
-- 범위 변경 ≥ 20% → PO 먼저 확정 → Architect 순차
+충족 시: 커밋·push·`sprints/sprint-N-retro.md` 작성.
+**미충족 시: 종료하지 않고 Step 5~6 루프 계속.**
 
-### Step 3 — Architect 리뷰 (Architect Agent)
+---
 
-**에이전트**: `architect` (Sprint 1은 opus, Sprint 2+는 sonnet)
-**입력**: sprint-N-plan.md, ARCHITECTURE.md, ADR/, Story 파일들
-**출력**: `sprints/sprint-N-arch-review.md`
+## 5. 완결 루프 의사코드
 
-검토 항목:
-1. 신규 파일/모듈 목록 (구체적 경로)
-2. 기존 코드 수정 필요 사항
-3. ADR-Story 정합성 검증 (키워드 매칭)
-4. ARCHITECTURE.md 수정 필요 여부
-5. 기술 결정 사항 확정
+```
+while (미완 Feature 존재):
+    for story in sprint_backlog:
+        if story.status != "Verified":
+            QA.write_red_tests(story)         # Step 4
+            Developer.implement_green(story)  # Step 5
+            verdict = Verifier.verify(story)  # Step 6 — 독립 검증
+            if verdict == PASS:
+                story.status = "Verified"
+            else:
+                story.status = "In Progress"  # 반려, 루프 계속
+    # 모든 story Verified 시:
+    if PO.demo_accept(sprint):                # Step 7
+        break
+    # else 루프 계속
 
-**ADR-Story 자동 정합성 체크**:
-- Story AC에서 기술 키워드 추출 (Cookie, JWT, RBAC 등)
-- 해당 키워드와 관련된 ADR이 존재하는지 확인
-- 불일치 시 WARN 레벨로 리포트
-
-### Step 4 — QA TDD Red (QA Agent)
-
-**에이전트 선택 기준**:
-- 단순 Sprint (기존 패턴 확장): QA+Dev 통합 에이전트 → Step 4+5 병합
-- 복잡 Sprint (신규 도메인/아키텍처 변경): QA 분리 → Step 4→5 순차
-
-**에이전트**: `executor` (sonnet) 또는 통합 시 `deep-executor` (opus)
-**입력**: Story 파일들 (AC + Test Plan), Architect Review, 기존 코드
-**출력**: 테스트 파일들 + 스텁
-
-**개선된 Red 패턴** (NotImplementedError 금지):
-```python
-# BAD (Sprint 1 방식): 미구현 에러를 기대
-def test_login_redirect():
-    with pytest.raises(NotImplementedError):
-        service.login_redirect("/dashboard")
-
-# GOOD (개선 방식): 의미있는 실패
-def test_login_redirect_returns_authorize_url():
-    result = service.login_redirect("/dashboard")
-    assert result.status_code == 302  # stub returns None → AssertionError
-    assert "authorize" in result.headers["location"]
+finalize_sprint()  # Step 8 — 여기 도달 = 진짜 완결
 ```
 
-스텁은 `return None` 또는 빈 객체를 반환하여 assertion이 의미있게 실패하도록 작성.
+**핵심**: 종료 조건은 "시간 경과"가 아니라 "모든 Feature가 Verified + PO Accept". 시간이 얼마가 걸리든 스크럼 마스터는 루프를 계속한다.
 
-**테스트 작성 규칙**:
-- 각 Story AC → 최소 1 테스트 (AC 번호 주석 필수)
-- Negative 테스트 포함 (AC에서 요구)
-- 경계 조건 테스트 추가 (AC에 없더라도)
-- Story당 최소 4 테스트
+---
 
-### Step 5 — Developer TDD Green (Developer Agent)
+## 6. Guardrails (v2.0 강화)
 
-**에이전트**: `deep-executor` (opus)
-**입력**: Red 테스트 파일들, Architect Review, 기존 코드
-**출력**: 구현 코드
+- **Verifier 게이트 우회 금지** — Developer 자기보고로 종료 절대 불가.
+- **Time Box로 종료 금지** — 미완 Feature 있으면 무조건 루프 계속.
+- **Frontend "컴포넌트만 작성" → Done 금지** — 실제 기동/테스트 실행 증거 필수.
+- **Jira Key 수동 입력 금지** — 자동 추출.
+- **앱 셸 없는 UI Story 금지** — 진입점 선행 Story 강제.
+- **데모는 종료 전, Sprint 안에서** — 종료 후 데모로 갭 발견되는 사고 방지.
+- **FEATURES.md Status 갱신 강제** — 완료 시 Done.
 
-규칙:
-- 테스트를 통과시키는 **최소 코드** 작성
-- 테스트 파일 수정 금지 (assertion 값만 의미 없으면 조정)
-- Story 순서대로 구현 (의존성 체인 따라)
-- 매 Story 구현 후 전체 테스트 실행 (회귀 확인)
+---
 
-### Step 5.5 — Refactor (신규 단계)
+## 7. v1.x → v2.0 변경 요약
 
-**Green 통과 후**:
-- 중복 코드 제거
-- 네이밍 개선
-- 불필요한 import 정리
-- 타입 힌트 보강
-- 테스트 재실행하여 회귀 없음 확인
-
-### Step 6 — 검증 + 커밋 (Scrum Master)
-
-자동 검증 체크리스트:
-```
-[ ] 전체 테스트 GREEN (Sprint 1 + ... + Sprint N 누적)
-[ ] 커버리지 ≥ 80% (서비스 레이어 ≥ 90% 권장)
-[ ] 린트/타입 에러 0건
-[ ] FEATURES.md Status 업데이트 (완료 Story → Done)
-[ ] Jira Story Status 갱신 (Funnel → Done) — 선택
-[ ] Frontend 테스트도 GREEN 확인 (npm test)
-```
-
-커밋 메시지 형식:
-```
-feat: Sprint N 완료 — <Sprint Goal 요약>
-
-## 완료 Story
-- F-xxx-xx: <제목> (N SP)
-...
-
-## TDD
-- X tests GREEN, Y% coverage
-
-Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
-```
-
-### Step 7 — 회고 + 종료 보고 (Scrum Master)
-
-**출력**: `sprints/sprint-N-retro.md`
-
-포함 항목:
-1. Sprint 결과 요약 (계획 vs 실제)
-2. 잘된 점 (Keep) — 3~5개
-3. 개선할 점 (Improve) — 3~5개
-4. 시도할 것 (Try) — 2~3개
-5. Sprint N+1 예고
-6. 누적 메트릭 (velocity 추세, 테스트 수, 커버리지)
-7. Phase 진행률
-
-## 5. 에이전트 구성
-
-| 역할 | 에이전트 타입 | 모델 | 호출 시점 |
-|---|---|---|---|
-| Scrum Master | 본체 (orchestrator) | opus | 전체 |
-| Product Owner | `analyst` | opus | Step 2 |
-| Architect | `architect` | opus(첫Sprint)/sonnet(이후) | Step 3 |
-| QA | `executor` | sonnet | Step 4 |
-| Developer | `deep-executor` | opus | Step 5 |
-
-**병렬 실행 규칙**:
-- Step 2 + Step 3: 병렬 가능 (범위 변경 < 20% 시)
-- Step 4 + Step 5: 통합 가능 (단순 Sprint 시)
-- Step 6: 항상 순차 (검증 후 커밋)
-
-## 6. Guardrails
-
-- **Jira Key 수동 입력 금지**: Story 파일에서 자동 추출
-- **SP 합계 자동 검증**: Plan 작성 시 산술 오류 방지
-- **이전 Sprint 테스트 회귀 금지**: 매 Step 5 후 전체 테스트 실행
-- **Frontend 테스트 미검증 방지**: npm test 실행 가능하지 않으면 Sprint 시작 전 해결
-- **FEATURES.md Status 갱신 강제**: Sprint 완료 시 Done으로 업데이트
-- **Red 테스트는 의미있는 실패**: NotImplementedError 금지, assert 기반 실패
-- **Refactor 단계 건너뛰기 금지**: Green 후 반드시 리팩터링 검토
-
-## 7. Cost & Time (8 Story / 30 SP 기준)
-
-| 단계 | 토큰 | 시간 |
+| 항목 | v1.x (사고 발생) | v2.0 (수정) |
 |---|---|---|
-| Step 0 Pre-flight | ~2k | 1분 |
-| Step 1 Sprint Plan | ~5k | 2분 |
-| Step 2 PO Review | ~15k (opus) | 3분 |
-| Step 3 Architect Review | ~20k | 4분 |
-| Step 4 QA Red | ~25k | 5분 |
-| Step 5 Developer Green | ~30k | 8분 |
-| Step 5.5 Refactor | ~5k | 2분 |
-| Step 6 Verify + Commit | ~3k | 1분 |
-| Step 7 Retro | ~5k | 2분 |
-| **합계** | **~110k** | **~28분** |
+| 종료 기준 | 시간(2주) + 자기보고 | **모든 Feature Verifier PASS + PO Accept** |
+| Verifier | 없음 | **독립 게이트 강제 (Step 6)** |
+| Frontend 검증 | 생략(npm 미설치) | **실행 증거 필수, 불가 시 FAIL** |
+| 데모 시점 | 종료 후 | **종료 전 Sprint 내 (Step 7)** |
+| 미완 Feature | "100% 완료" 오보고 | **루프 계속, 종료 불가** |
+| 에이전트 역할 | 모호(Dev가 검증 겸함) | **6역할 분리, 검증 독립** |
+
+---
 
 ## 8. When NOT to use
-- 스토리 < 3개: 직접 TDD가 빠르다
-- 아키텍처 미수립: `mv-arch-from-jira` 먼저
-- 백로그 미정리: `mv-backlog-prioritize` 먼저
+- 스토리 < 3개: 직접 TDD가 빠르다.
+- 아키텍처 미수립: `mv-arch-from-jira` 먼저.
+- 백로그 미정리: `mv-backlog-prioritize` 먼저.
 
 ## 9. Chains
-- 선행: `mv-feature-upsert` → `mv-backlog-prioritize` → `mv-arch-from-jira`
-- 후행: `mv-sprint-retro` (자동 포함), `mv-verify-merge`
-- 반복: Sprint N → Sprint N+1 (velocity 자동 이월)
+- 선행: `mv-feature-upsert` → `mv-backlog-prioritize` → `mv-arch-from-jira` (→ 선택적으로 `mv-sprint-plan`)
+- 내장: Plan · PO · Architect · QA · Developer · **Verifier** · Retro 를 한 루프에서 호출.
+- 반복: Sprint N → Sprint N+1 (velocity·carryover 자동 이월).
 
-## 10. 프로세스 개선 이력
-
-| 버전 | 변경 | 근거 |
-|---|---|---|
-| v1.0 | Sprint 1 실행 | 초기 프로세스 수립 |
-| v1.1 | PO+Architect 병렬화 | Sprint 2에서 에이전트 33% 감소 확인 |
-| v1.2 | QA+Dev 통합 옵션 | 단순 Sprint에서 효율 향상 확인 |
-| v1.3 | Jira Key 자동 매핑 | 3회 연속 수동 오류 발생 |
-| v1.4 | Red 패턴 개선 | NotImplementedError → assert 기반 실패 |
-| v1.5 | Refactor 단계 추가 | QA+Dev 회고에서 누락 지적 |
-| v1.6 | FEATURES.md Status 갱신 | PO 회고에서 추적 불가 지적 |
-| v1.7 | Frontend 테스트 강제 | 2 Sprint 미검증 방치 문제 |
-
-## 11. References
-- Sprint 1 Plan/Retro: `sprints/sprint-1-*.md`
-- Sprint 2 Plan/Retro: `sprints/sprint-2-*.md`
-- vibecode_base TDD: `~/workspace/vibecode_base/docs/`
-- Scrum Guide 2020
+## 10. References
+- v1.x 사고 기록: 본 프로젝트 Sprint 1~2 (Backend Done, Frontend 미통합 상태로 오종료)
+- my-vibe 가드레일: "자기보고 PASS 금지 — Verifier 평결 없이 진행 없음"
+- `~/workspace/vibecode_base/docs/05-quality-gates.md` (Verifier 증거 기반 완료)
+- 선행 스킬: mv-feature-upsert → mv-backlog-prioritize → mv-arch-from-jira
