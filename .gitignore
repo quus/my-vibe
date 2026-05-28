@@ -17,3 +17,6 @@ Thumbs.db
 .env
 .env.local
 .envrc
+
+# Inbox — staging area for skills received from other agents (not distributed)
+inbox/

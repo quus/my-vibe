@@ -3,6 +3,29 @@
 All notable changes to **my-vibe** will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.0.7] — 2026-05-28
+
+### Added
+- 신규 스킬 **`mv-sprint-run`** (다른 에이전트 기여, 2회 실전 스프린트에서 도출):
+  - 스크럼 마스터 오케스트레이터 — Step 0 Pre-flight → Plan → PO 리뷰 → Architect 리뷰
+    → QA TDD Red → Developer TDD Green → Refactor → 검증/커밋 → 회고 (7-Step + Step 0/5.5).
+  - 서브에이전트 구성: PO=`analyst`, Architect=`architect`, QA=`executor`, Dev=`deep-executor`.
+  - 병렬화 규칙(범위 변경 <20% 시 PO+Architect 병렬), QA+Dev 통합 옵션(단순 스프린트).
+  - Jira Key 자동 추출, SP 합계 자동 검증, NotImplementedError 금지(assert 기반 Red),
+    FEATURES.md Status 갱신 강제, Frontend 테스트 검증 강제.
+- INDEX 카탈로그 12종 → **13종** (#12 = mv-sprint-run, phase=Sprint 전체).
+
+### Changed
+- INDEX 흐름 다이어그램에 *★ 한 번에 — /mv-sprint-run* 오케스트레이터 분기 추가.
+- 체이닝 매트릭스 하단에 mv-sprint-run 오케스트레이터 설명 추가 (선행: upsert→prioritize→arch).
+- `mv-sprint-plan`(계획만) vs `mv-sprint-run`(실행까지) 역할 구분 명시.
+- 받은 원본 파일에 YAML frontmatter(name/description/triggers) 추가 — 자동 등록 가능하게.
+- Tarball: `my-vibe-1.0.7.tgz` (SHA256 갱신).
+
+### Housekeeping
+- `inbox/`를 `.gitignore`에 추가 (수신 스킬 staging 폴더 — 배포물에서 제외).
+- 잘못된 위치의 flat 파일 `~/.claude/skills/mv-sprint-run.md` 제거, 디렉터리 심볼릭 링크로 교정.
+
 ## [1.0.6] — 2026-05-27
 
 ### Changed

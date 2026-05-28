@@ -1,6 +1,6 @@
-# vibecode_base Skill Suite — `mv-*` 12종
+# vibecode_base Skill Suite — `mv-*` 13종
 
-> vibecode_base 방법론(`/home/kwshim/workspace/vibecode_base/`)의 *전 과정*을 자동화하는 12개 Skill 묶음.
+> vibecode_base 방법론(`/home/kwshim/workspace/vibecode_base/`)의 *전 과정*을 자동화하는 13개 Skill 묶음.
 > 모든 스킬은 한국어·영어 트리거 모두 지원하며, 결과를 *파일과 Jira 양쪽*에 남겨 추적성을 보장.
 
 ---
@@ -21,6 +21,7 @@
 | 9 | `mv-release` | post-5 | 태그·스모크·카나리·롤백 + Jira Epic Done |
 | 10 | `mv-incident-to-test` | 회귀 방지 | 프로덕션 버그 → 재현 RED → 픽스 → 영구 회귀 |
 | 11 | `mv-sprint-retro` | 학습 루프 | 스프린트 지표·ADR 델타·다음 용량 보정 |
+| 12 | `mv-sprint-run` | Sprint 전체 | Plan→PO→Arch→QA Red→Dev Green→Refactor→Retro 원스톱 오케스트레이션 |
 
 ---
 
@@ -56,6 +57,11 @@ ARCHITECTURE.md + adr/*.md + Jira Tech Stories
   │ /mv-pr-review    → 5-레인 리뷰            │
   │ /mv-verify-merge → 증거 PASS + 머지        │
   └───────────────────────────────────────────┘
+
+  ★ 또는 한 번에 — /mv-sprint-run (오케스트레이터):
+    Plan → PO 리뷰 → Architect 리뷰 → QA Red → Dev Green
+        → Refactor → 검증/커밋 → 회고  (Step 0~7 자동)
+    위 스프린트 단위 단계(plan + 루프 + retro)를 스크럼 마스터가 통째로 진행.
   │
   │ (Epic 단위 묶음)
   │ /mv-release
@@ -87,6 +93,11 @@ ARCHITECTURE.md + adr/*.md + Jira Tech Stories
 | `mv-sprint-retro` | — | — | — | — | ✅ | — | — | — | — | — | — | — |
 
 ✅ = 직후 일반적인 다음 스킬.
+
+> **`mv-sprint-run`은 오케스트레이터** — 위 매트릭스의 *plan → (red→impl→review→verify) → retro* 구간을
+> 스크럼 마스터 본체가 PO·Architect·QA·Developer 서브에이전트를 호출하며 한 번에 수행한다.
+> 개별 스킬을 손으로 체이닝하는 대신 `/mv-sprint-run` 한 줄로 스프린트 전체를 돌릴 때 사용.
+> 선행: `mv-feature-upsert` → `mv-backlog-prioritize` → `mv-arch-from-jira`.
 
 ---
 

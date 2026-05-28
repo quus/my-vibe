@@ -4,9 +4,9 @@
 > 소프트웨어 개발의 *전 과정*을 자동화하는 10개 mv-* 스킬 패키지.
 > [vibecode_base 방법론](../vibecode_base/) 위에 동작합니다.
 
-[![Version](https://img.shields.io/badge/version-1.0.6-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.0.7-blue.svg)](./CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
-[![Skills](https://img.shields.io/badge/skills-12-green.svg)](./skills/INDEX.md)
+[![Skills](https://img.shields.io/badge/skills-13-green.svg)](./skills/INDEX.md)
 
 ---
 
@@ -26,6 +26,7 @@
 | 릴리스 | `mv-release` | "릴리스 시작", "cut release" |
 | 사고 | `mv-incident-to-test` | "incident", "hotfix" |
 | 회고 | `mv-sprint-retro` | "스프린트 회고", "velocity" |
+| 스프린트 실행(전체) | `mv-sprint-run` | "스프린트 실행", "sprint run", "스프린트 돌려" |
 
 전체 흐름 다이어그램 + 체이닝 매트릭스: [`skills/INDEX.md`](./skills/INDEX.md).
 
