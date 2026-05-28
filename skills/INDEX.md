@@ -46,23 +46,22 @@ FEATURES.md + jira/{epics,stories}/*.md ──▶ Jira
   ▼
 ARCHITECTURE.md + adr/*.md + Jira Tech Stories
   │
-  │ /mv-sprint-plan (스프린트 시작 시점마다)
+  │ /mv-sprint-plan (협업 계획 — PO·Architect·QA·Dev·Critic, v2.0)
   ▼
-응집도 클러스터 → Jira Sprint(Future) + ./sprints/<id>.md
+./sprints/sprint-<N>-plan.md  (Story 리스트 + 회고 반영, ★Jira 미기록)
   │
-  ▼ (Story 1개씩 반복)
-  ┌───────────────────────────────────────────┐
-  │ /mv-tdd-redgen   → 실패 테스트            │
-  │ /mv-tdd-impl     → 통과 코드 (worktree)   │
-  │ /mv-pr-review    → 5-레인 리뷰            │
-  │ /mv-verify-merge → 증거 PASS + 머지        │
-  └───────────────────────────────────────────┘
-
-  ★ 또는 한 번에 — /mv-sprint-run (완결-기반 오케스트레이터, v2.0):
-    Pre-flight → Plan → PO 리뷰 → Architect 리뷰 → QA Red → Dev Green
-        → ★독립 Verifier 게이트(DoD 증거 확인) → PO 데모 Accept → 회고
-    Time Box 없음 — 모든 Feature가 Verifier PASS + PO Accept 받을 때까지 루프.
-    자기보고 PASS·시간 종료를 구조적으로 차단(v1.x 오종료 사고 방지).
+  │ 사람 리뷰 게이트 (제품/엔지니어링 Sign-off)
+  ▼
+  │ /mv-sprint-run (완결-기반 실행 오케스트레이터, v2.0)
+  ▼
+  ┌──────────────────────────────────────────────────────────┐
+  │ Step1: plan MD 로드 → Jira 반영(신규 Story upsert+Sprint Active) │
+  │ Step4 QA Red → Step5 Dev Green → ★Step6 독립 Verifier 게이트   │
+  │   (DoD 증거 확인: 백/프론트 테스트·기동·E2E) → Step7 PO 데모 Accept │
+  │ Time Box 없음 — 모든 Feature Verifier PASS + PO Accept까지 루프  │
+  └──────────────────────────────────────────────────────────┘
+  ※ 개별 스킬을 손으로 돌리려면:
+    /mv-tdd-redgen → /mv-tdd-impl → /mv-pr-review → /mv-verify-merge (Story 1개씩)
   │
   │ (Epic 단위 묶음)
   │ /mv-release

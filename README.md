@@ -4,7 +4,7 @@
 > 소프트웨어 개발의 *전 과정*을 자동화하는 10개 mv-* 스킬 패키지.
 > [vibecode_base 방법론](../vibecode_base/) 위에 동작합니다.
 
-[![Version](https://img.shields.io/badge/version-1.0.9-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](./CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Skills](https://img.shields.io/badge/skills-13-green.svg)](./skills/INDEX.md)
 
@@ -148,10 +148,30 @@ my-vibe의 오케스트레이션 스킬은 **전용 서브에이전트를 자체
 역할 에이전트 대신 *기본 Task 서브에이전트(general-purpose)* 로 동작 시도하나, 역할별 시스템
 프롬프트가 빠져 품질이 저하됩니다. 단일 스킬(tdd-redgen 등)은 본체에서 직접 수행 가능.
 
+### 번들 구성요소 — MCP 서버 & Hooks (플러그인 설치 시 자동 활성)
+
+my-vibe는 워크플로 스킬뿐 아니라 **MCP 서버 선언(`.mcp.json`)** 과 **라이프사이클 훅(`hooks/hooks.json`)** 을 함께 번들합니다. (마켓플레이스로 설치 시 자동 적용. 심볼릭 링크 `install.sh`는 skills만 설치하므로 MCP/hooks는 마켓플레이스 설치 경로에서 동작.)
+
+**`.mcp.json` — Jira + GitHub MCP** (`.env`의 변수를 `${VAR}`로 주입, 비밀은 커밋 안 됨):
+| 서버 | 구현 | 인증 | 사용 스킬 |
+|---|---|---|---|
+| `atlassian` | `uvx mcp-atlassian` | `JIRA_URL`/`JIRA_USERNAME`/`JIRA_API_TOKEN` (.env) | feature-upsert · backlog-prioritize · arch-from-jira · sprint-* · verify-merge |
+| `github` | remote `api.githubcopilot.com/mcp` (http) | `Bearer ${GITHUB_TOKEN}` | pr-review · verify-merge · release |
+
+> MCP가 활성이면 각 스킬이 REST 수동 호출 대신 MCP 도구를 우선 사용. 미설정/실패 시 기존 REST 폴백.
+> 엔드포인트·패키지는 환경에 맞게 `.mcp.json`에서 교체 가능 (예: Atlassian 공식 remote SSE, GitHub 로컬 서버).
+> SSH 인증만 쓰고 `GITHUB_TOKEN`이 없으면 git 작업은 SSH로 동작하되 GitHub *MCP 도구*는 비활성.
+
+**`hooks/hooks.json` — 안전 가드 훅**:
+| 이벤트 | 매처 | 동작 |
+|---|---|---|
+| PreToolUse | `Bash` | `guard-secrets.sh` — `git add/commit`이 `.env`·`credentials`·`*.pem` 등 비밀 파일을 staging하면 **deny** |
+| PostToolUse | `Write\|Edit` | `env-gitignore-check.sh` — `.env` 작성 시 `.gitignore` 미포함이면 **경고**(비차단) |
+
 ### 권장 도구
-- **Atlassian MCP server** — `/oh-my-claudecode:mcp-setup`로 설치. 없으면 REST 폴백.
 - **GitHub CLI** (`gh`) — `mv-pr-review`, `mv-verify-merge`, `mv-release`가 사용.
 - **git ≥ 2.5** — worktree(`mv-tdd-impl`)에 필요.
+- **uv/uvx** — `.mcp.json`의 `mcp-atlassian` 실행에 필요(미설치 시 atlassian MCP 비활성, REST 폴백).
 
 ### 방법론 문서
 스킬들은 [`vibecode_base/`](../vibecode_base/)의 방법론을 참조합니다. 같이 클론하시면:

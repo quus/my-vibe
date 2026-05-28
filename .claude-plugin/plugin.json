@@ -1,7 +1,7 @@
 {
   "name": "my-vibe",
   "description": "13 mv-* skills covering the full SDLC: Setup → Requirements → Jira → Architecture → Sprint Plan → TDD → Review → Merge → Release → Retro, plus mv-sprint-run one-shot sprint orchestration.",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "author": {
     "name": "kwshim",
     "email": "kusim31@gmail.com"

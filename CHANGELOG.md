@@ -3,6 +3,37 @@
 All notable changes to **my-vibe** will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.1.0] — 2026-05-28
+
+### Added
+- **`.mcp.json` — Jira + GitHub MCP 서버 번들 (B)**:
+  - `atlassian`: `uvx mcp-atlassian`, `.env`의 `JIRA_BASE_URL`/`JIRA_EMAIL`/`JIRA_API_TOKEN`을
+    `${VAR}`로 주입(비밀 커밋 안 됨).
+  - `github`: remote `https://api.githubcopilot.com/mcp/` (http), `Bearer ${GITHUB_TOKEN}`.
+  - MCP 활성 시 스킬이 REST 수동 호출 대신 MCP 도구 우선 사용, 미설정 시 REST 폴백.
+- **`hooks/hooks.json` — 안전 가드 훅 (C)**:
+  - `PreToolUse(Bash)` → `guard-secrets.sh`: `git add/commit`이 `.env`·`credentials.*`·`*.pem`·
+    `id_rsa` 등 비밀 파일을 staging하면 **deny**. (테스트: .env/credentials.json 차단, 일반 소스 허용)
+  - `PostToolUse(Write|Edit)` → `env-gitignore-check.sh`: `.env` 작성 시 `.gitignore` 미포함이면
+    **비차단 경고**.
+- README §3에 "번들 구성요소 — MCP & Hooks" 표 추가, 권장 도구에 `uv/uvx` 명시.
+
+### Changed
+- INDEX 흐름도 v2.0 정합성 수정: `mv-sprint-plan`은 *리뷰용 MD만 생성(Jira 미기록)* → 사람 Sign-off
+  → `mv-sprint-run`이 *MD 로드 → Jira 반영 → 실행(Verifier 게이트)*. 이전의 "plan이 Jira Sprint 생성"
+  표기 제거(inbox 요청서 §6 검증 기준 충족).
+
+### Verification (inbox 반영 확인)
+- `inbox/mv-sprint-plan.md`(v2.0 요청서) 검증 기준 5항목 — 패키지 충족 확인 (협업 4멤버·회고→Feature·
+  Jira 미기록 Guardrail·run Step1 MD로드·INDEX 흐름도 갱신).
+- `inbox/mv-sprint-run.md`(v2.0) — 패키지 본문과 일치(완결-기반 + Verifier 게이트 + Step1 MD로드).
+
+### Note
+- 설치 경로: 마켓플레이스 설치 시 `.mcp.json`·`hooks/` 자동 적용. 로컬 `install.sh`(심볼릭 링크)는
+  skills만 설치 → MCP/hooks가 필요하면 마켓플레이스 설치 사용.
+- minor 버전 bump(1.0.x → 1.1.0): 새 플러그인 구성요소(MCP·hooks) 추가.
+- Tarball: `my-vibe-1.1.0.tgz` (.mcp.json + hooks/ 포함, SHA256 갱신).
+
 ## [1.0.9] — 2026-05-28
 
 ### Added
