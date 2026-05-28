@@ -4,7 +4,7 @@
 > 소프트웨어 개발의 *전 과정*을 자동화하는 10개 mv-* 스킬 패키지.
 > [vibecode_base 방법론](../vibecode_base/) 위에 동작합니다.
 
-[![Version](https://img.shields.io/badge/version-1.0.8-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.0.9-blue.svg)](./CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Skills](https://img.shields.io/badge/skills-13-green.svg)](./skills/INDEX.md)
 
@@ -109,6 +109,44 @@ export JIRA_PROJECT_KEY="<KEY>"
 
 > 보안: `JIRA_API_TOKEN`은 **git-tracked 파일에 두지 마세요.**
 > 권장: 1Password CLI, `direnv`, 또는 shell의 `~/.zshenv`/`~/.bashrc`.
+
+### 필수 동반 플러그인 — oh-my-claudecode (OMC)
+
+my-vibe의 오케스트레이션 스킬은 **전용 서브에이전트를 자체 정의하지 않고**, OMC가 제공하는
+역할 서브에이전트(`oh-my-claudecode:*`)를 *호출*합니다. 이는 **의도된 설계**입니다 —
+역할 에이전트를 vendoring(복제)하면 frozen 스냅샷이 되어 OMC의 프롬프트·모델 라우팅 개선을
+받지 못하기 때문입니다. my-vibe는 *워크플로(언제·무엇을·어떤 순서)*만 정의하고,
+*개별 역할 수행*은 OMC 에이전트에 위임해 업데이트를 자동 상속합니다.
+
+**필수 — 미설치 시 오케스트레이션 스킬이 동작하지 않음**:
+```
+/plugin marketplace add anthropics/claude-code   # 또는 OMC 배포처
+/plugin install oh-my-claudecode
+```
+
+**의존하는 OMC 에이전트 → 사용 스킬**:
+
+| OMC 에이전트 | 역할 | 사용하는 my-vibe 스킬 |
+|---|---|---|
+| `analyst` | PO / 요구분석 | sprint-plan·sprint-run(PO), arch-from-jira, feature-upsert |
+| `architect` | 아키텍처 | arch-from-jira, sprint-plan, sprint-run |
+| `executor` | QA/구현 | tdd-impl, sprint-plan·sprint-run(QA), feature-upsert(sync) |
+| `deep-executor` | Developer | sprint-run(Dev), tdd-impl(복잡) |
+| `verifier` | 독립 검증 | verify-merge, sprint-run(Verifier 게이트) |
+| `test-engineer` | 테스트 설계 | tdd-redgen, sprint-plan·sprint-run(QA) |
+| `critic` | 계획 도전 | arch-from-jira, sprint-plan |
+| `quality/style/api/security/performance-reviewer` | 5-레인 리뷰 | pr-review |
+| `debugger` | 원인 분석 | incident-to-test |
+| `writer` | 문서 | release, sprint-retro |
+| `product-analyst` | 지표 분석 | backlog-prioritize, sprint-retro |
+
+> 호출 시 정식 ID는 `oh-my-claudecode:<agent>`. SKILL.md에는 가독성을 위해 짧은 이름으로 표기.
+> **OMC 버전 호환**: my-vibe는 OMC의 위 에이전트 *역할 계약*에만 의존하며 내부 구현은 의존하지 않음.
+> OMC가 에이전트를 추가/개선하면 my-vibe 변경 없이 자동 반영됨.
+
+**OMC 미설치 폴백**: 오케스트레이션 스킬(sprint-run/plan, arch-from-jira 등)은 OMC가 없으면
+역할 에이전트 대신 *기본 Task 서브에이전트(general-purpose)* 로 동작 시도하나, 역할별 시스템
+프롬프트가 빠져 품질이 저하됩니다. 단일 스킬(tdd-redgen 등)은 본체에서 직접 수행 가능.
 
 ### 권장 도구
 - **Atlassian MCP server** — `/oh-my-claudecode:mcp-setup`로 설치. 없으면 REST 폴백.

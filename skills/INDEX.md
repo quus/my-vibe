@@ -104,6 +104,12 @@ ARCHITECTURE.md + adr/*.md + Jira Tech Stories
 
 ## 4. 공통 전제 (모든 스킬)
 
+### 필수 동반 플러그인 — oh-my-claudecode (OMC)
+오케스트레이션 스킬은 OMC 역할 에이전트(`oh-my-claudecode:analyst·architect·executor·
+deep-executor·verifier·test-engineer·critic·*-reviewer·debugger·writer·product-analyst`)를
+**호출**한다(전용 에이전트 vendoring 안 함 — frozen 방지, OMC 업데이트 자동 상속).
+미설치 시 오케스트레이션 품질 저하. 상세 매핑·폴백은 README §3 "필수 동반 플러그인" 참조.
+
 ### 환경 변수
 ```
 JIRA_BASE_URL=https://<org>.atlassian.net

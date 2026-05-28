@@ -67,22 +67,21 @@ description: 스크럼 마스터로서 Sprint 전체를 완결-기반(No Time Bo
 - [ ] 이전 retro의 Try 항목 반영 여부
 - [ ] **이전 Sprint carryover(미완 Feature) 우선 편입**
 
-### Step 1 — Sprint Plan (Scrum Master)
-- 할당 Feature 선정 (PLAN-candidate.md 우선순위 + carryover)
-- **Jira Key는 `jira/stories/*.md`에서 자동 추출** (수동 입력 금지)
-- SP 합계 자동 계산·검증
-- **Story 분해 검증**: UI 기능은 *앱 셸/진입점*이 선행 Story로 존재하는지 확인 (없으면 추가)
-- Sprint Goal = 데모 가능한 문장
-- **DoD를 검증 가능한 체크리스트로 명시** (각 항목 = Verifier가 확인할 증거 형태)
+### Step 1 — Sprint Plan MD 로드 + Jira 반영 (Scrum Master, 사람 승인 후)
+> **mv-sprint-run은 계획을 직접 세우지 않는다.** `mv-sprint-plan`이 협업으로 만든 MD를 *읽어* 실행한다.
 
-### Step 2 — PO Review (Product Owner)
-- 7기준 점수 + Accept/Conditions/Reject
-- 범위 변경 < 20% → Step 3과 병렬 / ≥ 20% → 순차
-- **루프**: Conditions → Scrum Master 수정 → 재검토 (Accept까지)
+1. **Plan MD 로드**: `./sprints/sprint-<N>-plan.md`를 읽는다. 없으면 `mv-sprint-plan` 먼저 실행하라고 사람에게 안내 후 중단.
+2. **사람 리뷰 게이트 확인**: MD의 Sign-off(제품/엔지니어링 승인) 체크 확인. 미승인이면 중단하고 승인 요청.
+3. **신규 Story Jira 등록**: MD의 신규 Story(`F-NEW-*` 등 회고/carryover 생성분)를 `mv-feature-upsert` 로직으로 Jira에 멱등 등록. 등록된 Jira Key를 MD와 Story 파일에 회신.
+4. **Sprint 구성**: 선택된 Story의 Jira `Sprint` 필드를 이번 Sprint로 설정, Jira Sprint를 Future→Active.
+5. **검증**: 모든 배정 Story가 Jira에 존재하고 Sprint에 할당됐는지 확인.
 
-### Step 3 — Architect Review (Architect)
-- 신규/수정 파일, ADR-Story 정합성, 기술 결정
-- 출력은 QA가 테스트로 바로 변환 가능한 `[ ] 검증조건` 형식
+> **이 단계(Jira 반영)가 끝나야만 Step 4(QA Red) 개발 착수.** Jira 미반영 상태로 개발 시작 금지.
+
+### Step 2~3 — (mv-sprint-plan에서 이미 완료)
+PO 7기준 리뷰와 Architect 리뷰는 **`mv-sprint-plan` 협업 계획 단계에서 수행**된다.
+mv-sprint-run은 그 결과(승인된 MD + arch-review)를 *입력으로 신뢰*한다.
+단, Step 1에서 신규 Story가 추가됐거나 범위가 바뀌면 Architect 재검토를 1회 소환한다.
 
 ### Step 4 — QA TDD Red (QA Engineer)
 - AC당 ≥1 테스트, 네거티브/경계 포함

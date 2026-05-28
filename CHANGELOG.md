@@ -3,6 +3,29 @@
 All notable changes to **my-vibe** will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.0.9] — 2026-05-28
+
+### Added
+- **OMC 의존성 명시 문서화** (README §3 "필수 동반 플러그인" + INDEX §4):
+  - my-vibe는 전용 서브에이전트를 *vendoring하지 않고* OMC 역할 에이전트(`oh-my-claudecode:*`)를
+    호출한다는 설계 의도를 명문화.
+  - 근거: 전용 에이전트로 복제하면 frozen 스냅샷이 되어 OMC 프롬프트·모델 라우팅 개선을
+    못 받음. my-vibe는 *워크플로*만 정의하고 *역할 수행*은 OMC에 위임해 업데이트 자동 상속.
+  - 14종 OMC 에이전트 → 사용 스킬 매핑 표, 정식 ID(`oh-my-claudecode:<agent>`), 미설치 폴백 명시.
+
+### Changed
+- **`mv-sprint-plan` v2.0 (협업 계획)**: 스크럼 마스터 단독이 아니라 PO·Architect·QA·Developer(+Critic)
+  서브에이전트 협업으로 계획. 직전 회고 Improve/Try를 신규 Feature/Story로 변환. 산출물은
+  *사람 리뷰용 sprint-plan MD* — **Jira에 쓰지 않음**(반영은 mv-sprint-run으로 이관).
+- **`mv-sprint-run` 역할 재정의**: 계획을 직접 세우지 않고 `mv-sprint-plan`의 승인된 MD를 *읽어*
+  Jira 반영(신규 Story upsert + Sprint Active) 후 QA Red→Dev Green→Verifier 게이트 실행.
+  계획(plan)과 실행(run)의 책임 분리 명확화.
+- velocity는 **Verifier PASS 기준 SP**만 사용(과대보고 차단) — 양 스킬 공통.
+
+### Note
+- 카탈로그 13종 유지. plugin.json은 공식 7필드만 유지(의존성은 plugin.json이 아닌 README/INDEX 문서화).
+- Tarball: `my-vibe-1.0.9.tgz` (SHA256 갱신).
+
 ## [1.0.8] — 2026-05-28
 
 ### Changed
