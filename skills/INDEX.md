@@ -1,6 +1,6 @@
-# vibecode_base Skill Suite — `mv-*` 13종
+# vibecode_base Skill Suite — `mv-*` 17종 + verifier 에이전트
 
-> vibecode_base 방법론(`/home/kwshim/workspace/vibecode_base/`)의 *전 과정*을 자동화하는 13개 Skill 묶음.
+> vibecode_base 방법론(`/home/kwshim/workspace/vibecode_base/`)의 *전 과정*을 자동화하는 17개 Skill + 1 전용 에이전트.
 > 모든 스킬은 한국어·영어 트리거 모두 지원하며, 결과를 *파일과 Jira 양쪽*에 남겨 추적성을 보장.
 
 ---
@@ -21,7 +21,12 @@
 | 9 | `mv-release` | post-5 | 태그·스모크·카나리·롤백 + Jira Epic Done |
 | 10 | `mv-incident-to-test` | 회귀 방지 | 프로덕션 버그 → 재현 RED → 픽스 → 영구 회귀 |
 | 11 | `mv-sprint-retro` | 학습 루프 | 스프린트 지표·ADR 델타·다음 용량 보정 |
-| 12 | `mv-sprint-run` | Sprint 전체 | **완결-기반**(No Time Box) 오케스트레이션 — Plan→PO→Arch→QA Red→Dev Green→**독립 Verifier 게이트**→PO 데모 Accept→Retro. 모든 Feature Verifier PASS까지 루프 (v2.0) |
+| 12 | `mv-sprint-run` | Sprint 전체 | **완결-기반**(No Time Box) 오케스트레이션 — Plan MD→Jira 반영→QA Red→Dev Green→**독립 Verifier 게이트(UI는 Playwright)**→PO 데모 Accept→Retro. v2.1 UI 화면 검증 + v3.0 병렬 클러스터(worktree 격리) |
+| 13 | `mv-ui-verify` | 검증(UI) | 빠른 UI 게이트 — Playwright 웜 세션 재사용 + screen-smoke/full-e2e 2티어 + 헬스 대기 (P4) |
+| 14 | `mv-data-import` | 데이터 | Excel/CSV → 도메인 멱등 import (헤더검증·PII마스킹·erp+test 둘다·dry-run·매칭률) |
+| 15 | `mv-hygiene` | 경계 위생 | stale 프로세스 kill + 데모행 정리 + 컨테이너 헬스 대기 (멀티에이전트 잔존 오염 방지, P3) |
+| 16 | `mv-feature-from-excel` | 발굴 | 데이터 소스 미활용 컬럼 → 기능 후보 역발굴 → FEATURES.md |
+| — | `agents/verifier` | 에이전트 | **독립 검증 전용**(Write/Edit 비활성). mv-sprint-run Step 6 게이트가 소환. UI는 Playwright. |
 
 ---
 

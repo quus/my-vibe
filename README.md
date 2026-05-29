@@ -4,9 +4,9 @@
 > 소프트웨어 개발의 *전 과정*을 자동화하는 10개 mv-* 스킬 패키지.
 > [vibecode_base 방법론](../vibecode_base/) 위에 동작합니다.
 
-[![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)](./CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](./CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
-[![Skills](https://img.shields.io/badge/skills-13-green.svg)](./skills/INDEX.md)
+[![Skills](https://img.shields.io/badge/skills-17-green.svg)](./skills/INDEX.md)
 
 ---
 
@@ -27,6 +27,11 @@
 | 사고 | `mv-incident-to-test` | "incident", "hotfix" |
 | 회고 | `mv-sprint-retro` | "스프린트 회고", "velocity" |
 | 스프린트 실행(전체) | `mv-sprint-run` | "스프린트 실행", "sprint run", "스프린트 돌려" |
+| UI 검증 | `mv-ui-verify` | "ui 검증", "화면 검증", "playwright 게이트" |
+| 데이터 적재 | `mv-data-import` | "데이터 임포트", "엑셀 임포트", "시트 적재" |
+| 경계 위생 | `mv-hygiene` | "위생 점검", "hygiene", "stale 정리" |
+| 기능 발굴 | `mv-feature-from-excel` | "엑셀 분석해서 기능", "미활용 데이터" |
+| (에이전트) | `agents/verifier` | mv-sprint-run Step 6 게이트가 소환 (독립 검증) |
 
 전체 흐름 다이어그램 + 체이닝 매트릭스: [`skills/INDEX.md`](./skills/INDEX.md).
 

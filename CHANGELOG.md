@@ -3,6 +3,34 @@
 All notable changes to **my-vibe** will be documented in this file.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [SemVer](https://semver.org/).
 
+## [1.2.0] — 2026-05-29
+
+### Added (Sprint 7~13 실측 페인 기반 배치)
+- **신규 스킬 4개** (13 → 17종):
+  - `mv-ui-verify` (🟥 P4) — 빠른 UI 게이트: Playwright 웜 세션(storageState) 재사용 +
+    screen-smoke/full-e2e 2티어 + 헬스 대기. 검증 신뢰도 유지하며 속도 ↑.
+  - `mv-data-import` (🟧) — Excel/CSV → 도메인 멱등 import: 헤더검증·PII마스킹·자연키 upsert·
+    `--target both`(erp+test, P6)·`--dry-run`·매칭률 리포트·감사로그 우회.
+  - `mv-hygiene` (🟧 P3) — 경계 위생: stale 프로세스(20분+) kill·데모행 정리·컨테이너 헬스 대기.
+  - `mv-feature-from-excel` (🟨) — 미활용 데이터 컬럼 → 기능 후보 역발굴 → FEATURES.md.
+- **신규 에이전트 `agents/verifier.md`** (🟨) — 독립 검증 전용. `tools: Read, Bash, Glob, Grep`로
+  **Write/Edit 비활성**(이해상충 차단). mv-sprint-run Step 6 게이트가 소환. UI는 Playwright(curl 금지).
+  → 전용 에이전트 vendoring 예외: *도구 제약(검증 독립성)* 이 하드 요구라 OMC 위임 대신 번들.
+
+### Changed
+- **`mv-sprint-run` v2.0 → v2.1 + v3.0**:
+  - v2.1: **UI는 Playwright 실 브라우저로 검증(curl 금지)** — `{role_level}` 객체를 React 자식으로 렌더해
+    React #31 화면 크래시(curl·API·mock 전부 GREEN이었음) 사고 방지. QA는 화면 기준 상세 테스트케이스 작성.
+  - v3.0(병렬 클러스터): worktree per cluster(P1·P2) · single-migration-owner(P5) ·
+    clean-gate-after-all + mv-hygiene(P7) · import both(P6) · agent time cap(P3) ·
+    UI는 mv-ui-verify(P4) · Verifier 전용 에이전트.
+- INDEX 카탈로그 17종 + verifier 에이전트, README 역할표 갱신.
+
+### Note
+- plugin.json/marketplace.json 설명 갱신, minor bump(신규 스킬·에이전트). agents/ 디렉터리 신설.
+- 마켓플레이스 설치 시 `agents/verifier` 자동 등록. 로컬 install.sh는 skills만(agents는 마켓플레이스 경로).
+- Tarball: `my-vibe-1.2.0.tgz` (skills 17 + agents/ + .mcp.json + hooks/ 포함).
+
 ## [1.1.1] — 2026-05-28
 
 ### Changed
